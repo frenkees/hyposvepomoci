@@ -15,6 +15,12 @@
 
   function fmtCZK(n) { try { return new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(Math.round(n)); } catch (e) { return Math.round(n) + " Kč"; } }
   function hasChart() { return typeof window.Chart !== "undefined"; }
+  /* Když graf nejde vykreslit, sbal i prázdný 260px box okolo canvasu. */
+  function hideCanvasBox(canvas) {
+    canvas.style.display = "none";
+    var box = canvas.closest(".chart-card__canvas");
+    if (box) box.style.height = "auto";
+  }
 
   /* Lazy-load Chart.js — až když se kalkulačka objeví ve viewportu. */
   function ensureChartJs() {
@@ -58,7 +64,7 @@
     var fb = document.querySelector('[data-chart-fallback="balance"]');
     if (!canvas) return;
     if (!hasChart()) {
-      canvas.style.display = "none";
+      hideCanvasBox(canvas);
       // Fallback: zůstatek v milnících.
       var picks = [5, 10, 15, 20, 25, 30].filter(function (y) { return years[y - 1]; });
       fb.innerHTML = '<table class="stress" style="width:100%"><tbody>' +
@@ -84,7 +90,7 @@
     var totalInt = years.reduce(function (a, y) { return a + y.interest; }, 0);
     var totalPrin = years.reduce(function (a, y) { return a + y.principal; }, 0);
     if (!hasChart()) {
-      canvas.style.display = "none";
+      hideCanvasBox(canvas);
       fb.innerHTML = '<table class="stress" style="width:100%"><tbody>' +
         '<tr><td>Jistina celkem</td><td style="text-align:right">' + fmtCZK(totalPrin) + '</td></tr>' +
         '<tr><td>Úroky celkem</td><td style="text-align:right">' + fmtCZK(totalInt) + '</td></tr></tbody></table>';
@@ -121,16 +127,18 @@
     };
   }
 
-  /** Amortizační tabulka po letech (rozklikávací měsíce). */
+  function fmtInt(n) { try { return new Intl.NumberFormat("cs-CZ").format(Math.round(n)); } catch (e) { return String(Math.round(n)); } }
+
+  /** Amortizační tabulka po letech. Kompaktní čísla (v Kč), aby se vešla bez přetékání. */
   function renderAmortTable(sched) {
     var host = document.querySelector("[data-amort]");
     if (!host) return;
     var years = byYear(sched.rows);
-    var html = '<table class="stress" style="width:100%"><thead><tr><th>Rok</th><th>Zaplaceno</th><th>Úrok</th><th>Jistina</th><th>Zůstatek</th></tr></thead><tbody>';
+    var html = '<table class="amort-table"><thead><tr><th>Rok</th><th>Zaplaceno</th><th>Úrok</th><th>Jistina</th><th>Zůstatek</th></tr></thead><tbody>';
     years.forEach(function (y) {
-      html += '<tr><td>' + y.year + '</td><td>' + fmtCZK(y.paid) + '</td><td>' + fmtCZK(y.interest) + '</td><td>' + fmtCZK(y.principal) + '</td><td>' + fmtCZK(y.balance) + '</td></tr>';
+      html += '<tr><td>' + y.year + '</td><td>' + fmtInt(y.paid) + '</td><td>' + fmtInt(y.interest) + '</td><td>' + fmtInt(y.principal) + '</td><td>' + fmtInt(y.balance) + '</td></tr>';
     });
-    html += '</tbody></table><p class="text-muted" style="font-size:.85rem">Souhrn po letech. Měsíční detail je v CSV.</p>';
+    html += '</tbody></table><p class="text-muted" style="font-size:.85rem">Souhrn po letech, částky v Kč. Měsíční detail je v CSV.</p>';
     host.innerHTML = html;
   }
 

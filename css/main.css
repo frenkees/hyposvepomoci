@@ -79,8 +79,8 @@ li { margin-bottom: var(--sp-2); }
 .section__lead { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 720px; }
 .grid { display: grid; gap: var(--sp-6); }
 @media (min-width: 768px) {
-  .grid--2 { grid-template-columns: 1fr 1fr; }
-  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .grid--2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+  .grid--3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
 
 /* --- Karty --- */
@@ -130,7 +130,7 @@ li { margin-bottom: var(--sp-2); }
 
 /* --- Tři pohledy: 🏦 banka / ⚖️ regulace / 🧠 vy --- */
 .three-views { display: grid; gap: var(--sp-3); margin: var(--sp-4) 0; }
-@media (min-width: 720px) { .three-views { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 720px) { .three-views { grid-template-columns: repeat(3, minmax(0,1fr)); } }
 .view { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); background: var(--color-surface); }
 .view__label { font-family: var(--font-heading); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); }
 .view--bank .view__label { color: var(--color-primary); }
