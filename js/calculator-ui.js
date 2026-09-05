@@ -117,9 +117,10 @@
           '<div><h4>Kolik si můžu dovolit vs. kolik mi půjčí banka</h4><div class="abc" data-abc></div></div>' +
           '<div><h4>Stres test: co když…</h4><div class="stress" data-stress></div></div>' +
           '<div class="charts" data-charts>' +
-            '<div class="chart-card"><h4>Vývoj dluhu v čase</h4><div class="chart-card__canvas"><canvas data-chart="balance"></canvas></div></div>' +
-            '<div class="chart-card"><h4>Složení splátky (jistina vs. úrok)</h4><div class="chart-card__canvas"><canvas data-chart="composition"></canvas></div></div>' +
+            '<div class="chart-card"><h4>Vývoj dluhu v čase</h4><div class="chart-card__canvas"><canvas data-chart="balance"></canvas></div><div data-chart-fallback="balance"></div></div>' +
+            '<div class="chart-card"><h4>Složení splátek (jistina vs. úrok)</h4><div class="chart-card__canvas"><canvas data-chart="composition"></canvas></div><div data-chart-fallback="composition"></div></div>' +
           '</div>' +
+          '<div><div style="display:flex;justify-content:space-between;align-items:center;gap:var(--sp-3);flex-wrap:wrap"><h4 style="margin:0">Splátkový kalendář po letech</h4><button type="button" class="btn btn--ghost" data-csv>⬇ Stáhnout (CSV)</button></div><div class="amort" data-amort></div></div>' +
         '</div>' +
       '</div>';
   }
