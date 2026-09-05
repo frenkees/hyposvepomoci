@@ -6,6 +6,16 @@
   <title>Hyposvepomoci — Hypotéka srozumitelně, krok za krokem</title>
   <meta name="description" content="Interaktivní průvodce hypotékou pro laiky. Zjistěte, jestli jste připraveni, spočítejte splátku, rozumějte fixaci, poplatkům i tomu, kolik si můžete bezpečně dovolit. Založeno na aktuální české legislativě.">
   <meta name="robots" content="index, follow">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://hyposvepomoci.cz/">
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:title" content="Hyposvepomoci — Hypotéka srozumitelně, krok za krokem">
+  <meta property="og:description" content="Interaktivní průvodce hypotékou pro laiky: kalkulačka, stres test, fixace, poplatky a kolik si můžete bezpečně dovolit. Podle aktuální české legislativy.">
+  <meta property="og:image" content="assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,7 +93,7 @@
         <h2>Jsme připraveni? Pojďme to zjistit.</h2>
         <p class="section__lead">Odpovězte na pár jednoduchých otázek. Nic neposíláme, výsledek uvidíte hned a je jen orientační — pomůže vám zorientovat se, ne rozhodnout za vás.</p>
 
-        <div class="guide" id="guide" data-guide role="group" aria-label="Průvodce připraveností na hypotéku">
+        <div class="guide" id="guide" data-guide role="group" aria-label="Průvodce připraveností na hypotéku" aria-live="polite">
           <!-- Obsah generuje js/readiness-guide.js -->
           <noscript><p class="note note--warn">Průvodce vyžaduje zapnutý JavaScript. Můžete pokračovat rovnou na <a href="#kalkulacka">kalkulačku</a> nebo <a href="#zaklady">základy hypoték</a>.</p></noscript>
         </div>
@@ -322,7 +332,31 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Hyposvepomoci — hypoteční průvodce a kalkulačka",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "cs",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CZK" },
+        "description": "Interaktivní průvodce hypotékou pro laickou veřejnost: kalkulačka splátek, LTV vůči odhadu, stres test, daňový odpočet a rozhodovací nástroje podle aktuální české legislativy."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Co když banka ocení dům na méně, než kolik stojí?", "acceptedAnswer": { "@type": "Answer", "text": "LTV se počítá z odhadu, ne z kupní ceny. Nižší odhad znamená vyšší LTV; rozdíl musíte dorovnat vyššími vlastními zdroji nebo hledat jinou banku." } },
+          { "@type": "Question", "name": "Je DSTI nebo DTI závazný limit?", "acceptedAnswer": { "@type": "Answer", "text": "Aktuálně ne. Závazný je limit LTV. DSTI a DTI jsou doporučení ČNB — obezřetnost nad 40 % DSTI a nad 8násobkem DTI, ne důvod k automatickému zamítnutí." } },
+          { "@type": "Question", "name": "Kolik zaplatím při předčasném splacení hypotéky?", "acceptedAnswer": { "@type": "Answer", "text": "Závisí na situaci — neplatí univerzální jedno procento. Obecný strop je 0,25 % za každý rok do konce fixace, nejvýše 1 %; řada situací (konec fixace, zákonné životní situace) je bez náhrady." } }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <script src="js/data-layer.js"></script>
   <script src="js/app.js"></script>
   <script src="js/readiness-guide.js"></script>

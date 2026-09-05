@@ -10,9 +10,31 @@
 
   var charts = {};
   var lastSchedule = null;
+  var CHART_SRC = "https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js";
+  var chartLoading = false;
 
   function fmtCZK(n) { try { return new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(Math.round(n)); } catch (e) { return Math.round(n) + " Kč"; } }
   function hasChart() { return typeof window.Chart !== "undefined"; }
+
+  /* Lazy-load Chart.js — až když se kalkulačka objeví ve viewportu. */
+  function ensureChartJs() {
+    if (hasChart() || chartLoading) return;
+    chartLoading = true;
+    var s = document.createElement("script");
+    s.src = CHART_SRC; s.async = true;
+    s.onload = function () { if (lastSchedule) redraw(lastSchedule); };
+    s.onerror = function () { /* zůstane textový fallback */ };
+    document.head.appendChild(s);
+  }
+  function initLazyLoad() {
+    var target = document.getElementById("kalkulacka");
+    if (!target) return;
+    if (!("IntersectionObserver" in window)) { ensureChartJs(); return; }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { ensureChartJs(); obs.disconnect(); } });
+    }, { rootMargin: "300px" });
+    obs.observe(target);
+  }
 
   /** Agregace měsíčního kalendáře po rocích. */
   function byYear(rows) {
@@ -134,16 +156,22 @@
   }
 
   /* --- Napojení --- */
-  document.addEventListener("calc:updated", function (e) {
-    var sched = e.detail.result.sched;
-    lastSchedule = sched;
+  function redraw(sched) {
     var years = byYear(sched.rows);
     renderBalanceChart(years);
     renderCompositionChart(years);
     renderAmortTable(sched);
+  }
+
+  document.addEventListener("calc:updated", function (e) {
+    lastSchedule = e.detail.result.sched;
+    redraw(lastSchedule);
   });
 
   document.addEventListener("click", function (e) {
     if (e.target && e.target.matches("[data-csv]")) downloadCSV();
   });
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initLazyLoad);
+  else initLazyLoad();
 })();

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0D2B3E"/>
+      <stop offset="0.6" stop-color="#1B4965"/>
+      <stop offset="1" stop-color="#2D6A8F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <g transform="translate(90,150)">
+    <path d="M60 0 0 50v6h16v70h34V90h20v42h34V56h16v-6z" fill="#BEE9E8"/>
+  </g>
+  <text x="230" y="250" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700" fill="#ffffff">Hyposvepomoci</text>
+  <text x="230" y="330" font-family="'Source Sans 3', Arial, sans-serif" font-size="40" fill="#BEE9E8">Hypotéka srozumitelně, krok za krokem</text>
+  <text x="230" y="415" font-family="'Source Sans 3', Arial, sans-serif" font-size="30" fill="#DCE8F0">Kalkulačka · stres test · fixace · kolik si bezpečně dovolím</text>
+  <text x="90" y="560" font-family="'Source Sans 3', Arial, sans-serif" font-size="26" fill="#8FB8CE">Podle aktuální české legislativy · vzdělávací účel</text>
+</svg>
