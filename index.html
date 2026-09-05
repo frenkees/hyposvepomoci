@@ -13,6 +13,7 @@
 
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/calculator.css">
 </head>
 <body>
   <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -266,8 +267,8 @@
     <section class="section" id="kalkulacka">
       <div class="container">
         <h2>Hypoteční kalkulačka</h2>
-        <p class="section__lead">Orientační výpočet. Skutečný splátkový kalendář banky se může lišit (způsob úročení, zaokrouhlování, datum čerpání a další smluvní podmínky).</p>
-        <div class="card" id="calculator-root"><p class="placeholder">[Kalkulačka — Fáze 2: splátka, LTV vůči odhadu, dostupnost A/B/C, rezerva, dvouosý stres test, grafy.]</p></div>
+        <p class="section__lead">Spočítejte si splátku, LTV vůči odhadu, rezervu po koupi i to, kolik si můžete <strong>bezpečně</strong> dovolit. Scénář můžete sdílet odkazem.</p>
+        <div id="calculator-root"><p class="placeholder">Načítám kalkulačku…</p></div>
       </div>
     </section>
 
@@ -313,5 +314,7 @@
   <script src="js/data-layer.js"></script>
   <script src="js/app.js"></script>
   <script src="js/readiness-guide.js"></script>
+  <script src="js/calculator-core.js"></script>
+  <script src="js/calculator-ui.js"></script>
 </body>
 </html>
