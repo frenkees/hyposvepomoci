@@ -172,9 +172,10 @@
     root.querySelector("[data-aff-how]").innerHTML =
       '<p><strong>Vstupy:</strong> příjem ' + fmtCZK(state.prijem) + ', závazky ' + fmtCZK(state.zavazky) + ', úspory ' + fmtCZK(state.uspory) + ', rezerva ' + fmtCZK(state.rezerva) + ', sazba ' + String(state.sazba).replace(".", ",") + ' %, doba ' + state.doba + ' let, LTV limit ' + maxLtv() + ' %.</p>' +
       '<p><strong>Postup:</strong> Vlastní zdroje na koupi = úspory − rezerva = ' + fmtCZK(ownAvail) + '. Maximální úvěr podle DSTI ' + dstiThr() + ' % a DTI ' + dtiThr() + '× = ' + fmtCZK(rozumny.maxLoanByIncome) + '. Cena je omezena buď příjmem (úvěr + vlastní zdroje), nebo LTV (vlastní zdroje ÷ (1 − LTV)). Bereme nižší z obou.</p>' +
-      '<p><strong>Předpoklady:</strong> anuitní splácení, měsíční úrok = roční ÷ 12, transakční náklady ~3 % ceny. <strong>Nebere v úvahu:</strong> konkrétní metodiku banky, bonusové/nepravidelné příjmy, budoucí změny sazeb, individuální posouzení bonity.</p>';
+      '<p><strong>Předpoklady:</strong> <button class="term" data-term="anuita">anuitní splácení</button>, měsíční úrok = roční ÷ 12, transakční náklady ~3 % ceny. <strong>Nebere v úvahu:</strong> konkrétní metodiku banky, bonusové/nepravidelné příjmy, budoucí změny sazeb, individuální posouzení <button class="term" data-term="bonita">bonity</button>.</p>';
 
     updateUrl();
+    if (window.HypoTerms) window.HypoTerms.enhance(root);
   }
 
   function cardRow(k, v, strong, cls) {

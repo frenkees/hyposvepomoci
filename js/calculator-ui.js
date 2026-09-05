@@ -181,16 +181,16 @@
       { label: "Celkem zaplaceno", value: fmtCZK(r.sched.totalPaid) },
       { label: "Zaplacené úroky", value: fmtCZK(r.sched.totalInterest) },
       { label: "Přeplatek (úroky/jistina)", value: r.loan ? fmtPct(r.sched.totalInterest / r.loan * 100) : "—" },
-      { label: "LTV (vůči odhadu)", value: fmtPct(r.ltv), ind: indicator(ltvLevel, ltvLevel === "green" ? "v mezích (limit " + lmax + " %)" : (ltvLevel === "amber" ? "u limitu " + lmax + " %" : "nad limitem " + lmax + " %")) },
+      { label: '<button class="term" data-term="ltv">LTV</button> (vůči odhadu)', value: fmtPct(r.ltv), ind: indicator(ltvLevel, ltvLevel === "green" ? "v mezích (limit " + lmax + " %)" : (ltvLevel === "amber" ? "u limitu " + lmax + " %" : "nad limitem " + lmax + " %")) },
       { label: "Doba splácení", value: (r.sched.months / 12).toFixed(1).replace(".", ",") + " let" }
     ];
     if (r.dsti != null) {
       var dLevel = r.dsti < dstiThr() ? "green" : (r.dsti <= dstiThr() + 10 ? "amber" : "red");
-      cards.push({ label: "DSTI (orientačně)", value: fmtPct(r.dsti), ind: indicator(dLevel, "doporučení < " + dstiThr() + " %") });
+      cards.push({ label: '<button class="term" data-term="dsti">DSTI</button> (orientačně)', value: fmtPct(r.dsti), ind: indicator(dLevel, "doporučení < " + dstiThr() + " %") });
     }
     if (r.dti != null) {
       var tLevel = r.dti < dtiThr() ? "green" : (r.dti <= dtiThr() + 1 ? "amber" : "red");
-      cards.push({ label: "DTI (orientačně)", value: r.dti.toFixed(1).replace(".", ",") + "×", ind: indicator(tLevel, "doporučení < " + dtiThr() + "×") });
+      cards.push({ label: '<button class="term" data-term="dti">DTI</button> (orientačně)', value: r.dti.toFixed(1).replace(".", ",") + "×", ind: indicator(tLevel, "doporučení < " + dtiThr() + "×") });
     }
 
     m.innerHTML = cards.map(function (c) {
@@ -296,6 +296,7 @@
     renderAbc(r);
     renderStress(r);
     updateUrl();
+    if (window.HypoTerms) window.HypoTerms.enhance(root);
     document.dispatchEvent(new CustomEvent("calc:updated", { detail: { state: Object.assign({}, state), result: r } }));
   }
 

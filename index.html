@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/sections.css">
   <link rel="stylesheet" href="css/calculator.css">
+  <link rel="stylesheet" href="css/terms.css">
   <link rel="stylesheet" href="css/paywall.css">
   <link rel="stylesheet" href="css/print.css">
 </head>
@@ -114,7 +115,7 @@
     <section class="section" id="zaklady">
       <div class="container">
         <h2>Co je hypotéka</h2>
-        <p class="section__lead">Hypotéka je dlouhodobý úvěr zajištěný nemovitostí. Banka vám půjčí a jako jistotu si zapíše zástavní právo k nemovitosti — dokud splácíte, je vaše.</p>
+        <p class="section__lead">Hypotéka je dlouhodobý úvěr zajištěný nemovitostí. Banka vám půjčí a jako jistotu si zapíše <button class="term" data-term="zastava">zástavní právo</button> k nemovitosti — dokud splácíte, je vaše.</p>
         <div class="grid grid--2">
           <div class="card">
             <h3>Čím se liší od jiných úvěrů</h3>
@@ -229,7 +230,7 @@
       <div class="container">
         <h2>Na co si dát pozor</h2>
         <div class="grid grid--2">
-          <div class="card"><h3>Skryté poplatky</h3><p>Odhad, vedení účtu, zpracování, pojištění. Porovnávejte podle <strong>RPSN</strong>, ne jen podle úroku.</p></div>
+          <div class="card"><h3>Skryté poplatky</h3><p>Odhad, vedení účtu, zpracování, pojištění. Porovnávejte podle <button class="term" data-term="rpsn">RPSN</button>, ne jen podle <button class="term" data-term="urok">úroku</button>.</p></div>
           <div class="card"><h3>Pojištění</h3><p>Pojištění nemovitosti bývá povinné (vinkulované ve prospěch banky). Životní pojištění zpravidla povinné není — často je jen podmínkou zvýhodněné sazby a bankovní bývá dražší než externí.</p></div>
           <div class="card"><h3>Časté chyby</h3><p>Neporovnání nabídek, sledování jen úroku, půjčení si maxima bez rezervy, opomenutí životních změn.</p></div>
           <div class="card"><h3>Checklist „Co si pohlídat ve smlouvě“</h3><p class="placeholder">[Interaktivní checklist — Fáze 3.]</p></div>
@@ -365,6 +366,7 @@
   </script>
 
   <script src="js/data-layer.js"></script>
+  <script src="js/terms.js"></script>
   <script src="js/app.js"></script>
   <script src="js/readiness-guide.js"></script>
   <script src="js/calculator-core.js"></script>
