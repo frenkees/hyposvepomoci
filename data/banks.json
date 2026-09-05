@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "layer": "Tržní data — nabídky bank (PREMIUM)",
+    "verifiedAt": null,
+    "lastUpdated": null,
+    "note": "Infrastruktura pro prémiové porovnání konkrétních nabídek bank. ZÁMĚRNĚ PRÁZDNÉ. Sazby a podmínky se mění velmi rychle — sekci NEZVEŘEJŇOVAT, dokud není zajištěn proces pravidelné aktualizace a ověřování. Každá nabídka musí nést vlastní verifiedAt.",
+    "disclaimer": "Uvedené nabídky jsou orientační a časově omezené. Vždy si vyžádejte konkrétní nabídku přímo od banky."
+  },
+  "offers": []
+}

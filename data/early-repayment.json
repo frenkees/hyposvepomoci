@@ -1,0 +1,74 @@
+{
+  "_meta": {
+    "layer": "Zákonná data — předčasné splacení",
+    "verifiedAt": "2026-09-05",
+    "note": "Pravidla náhrady nákladů při předčasném splacení úvěru na bydlení dle zákona č. 257/2016 Sb. o spotřebitelském úvěru, ve znění novely účinné od 1. 9. 2024. Před publikací ověřit proti aktuálnímu znění zákona a informacím MF ČR / ČNB.",
+    "disclaimer": "Zjednodušený edukační přehled. Konkrétní podmínky vždy ověřte ve své úvěrové smlouvě a u své banky.",
+    "warning": "NEPOUŽÍVAT univerzální tvrzení typu „vždy max. 1 % / 50 000 Kč“. Výše náhrady i výjimky bez náhrady závisí na konkrétní situaci."
+  },
+  "facts": {
+    "obecny_strop_procenta": {
+      "value": 0.25,
+      "unit": "% za každý započatý rok do konce fixace",
+      "binding": true,
+      "confidence": "zakon",
+      "validFrom": "2024-09-01",
+      "source": "Zákon č. 257/2016 Sb., novela účinná od 1. 9. 2024; MF ČR",
+      "sourceUrl": "https://www.mfcr.cz/",
+      "verifiedAt": "2026-09-05",
+      "label": "Co to je?",
+      "note": "Obecný strop účelně vynaložených nákladů banky při předčasném splacení: 0,25 % z předčasně splacené částky za každý započatý rok zbývající do konce fixace.",
+      "means": "Čím blíže konci fixace, tím nižší možná náhrada. Konkrétní částka závisí na zbývající době fixace a výši splátky.",
+      "next": "Zjistěte, kolik let vám zbývá do konce fixace, a projděte rozhodovací strom."
+    },
+    "obecny_strop_maximum": {
+      "value": 1,
+      "unit": "% z předčasně splacené částky",
+      "binding": true,
+      "confidence": "zakon",
+      "validFrom": "2024-09-01",
+      "source": "Zákon č. 257/2016 Sb., novela účinná od 1. 9. 2024; MF ČR",
+      "sourceUrl": "https://www.mfcr.cz/",
+      "verifiedAt": "2026-09-05",
+      "label": "Co to je?",
+      "note": "Horní strop náhrady účelně vynaložených nákladů činí 1 % z předčasně splacené částky (a zároveň nesmí přesáhnout zákonem stanovené absolutní limity).",
+      "means": "I když do konce fixace zbývá mnoho let, náhrada nepřekročí 1 % splácené částky.",
+      "next": "Použijte rozhodovací strom — možná spadáte do případu bez náhrady."
+    }
+  },
+  "decisionTree": {
+    "title": "Chci hypotéku předčasně splatit — kolik zaplatím?",
+    "nodes": [
+      {
+        "id": "konec_fixace",
+        "question": "Splácíte právě ke konci fixačního období?",
+        "yes": { "result": "bez_nahrady", "text": "Ke konci fixace lze zpravidla splatit bez náhrady nákladů." },
+        "no": "bez_fixace"
+      },
+      {
+        "id": "bez_fixace",
+        "question": "Máte úvěr bez sjednané fixace (variabilní sazba) nebo jste v období bez fixace?",
+        "yes": { "result": "specificky_rezim", "text": "Platí specifický režim — obvykle nižší nebo žádná náhrada. Ověřte ve smlouvě." },
+        "no": "rocni_castecna"
+      },
+      {
+        "id": "rocni_castecna",
+        "question": "Jde o zákonem umožněnou pravidelnou (např. roční) částečnou splátku v limitu?",
+        "yes": { "result": "bez_nahrady", "text": "Zákonná částečná splátka v daném limitu bývá bez náhrady." },
+        "no": "prodej"
+      },
+      {
+        "id": "prodej",
+        "question": "Splácíte kvůli prodeji nemovitosti a smlouva trvá déle než 24 měsíců?",
+        "yes": { "result": "specificky_rezim", "text": "Pro prodej po delší době trvání smlouvy platí specifický režim náhrady." },
+        "no": "zivotni_situace"
+      },
+      {
+        "id": "zivotni_situace",
+        "question": "Jde o zákonem uznanou životní situaci (např. úmrtí, dlouhodobá nemoc, invalidita)?",
+        "yes": { "result": "bez_nahrady", "text": "V zákonem vymezených životních situacích lze splatit bez náhrady." },
+        "no": { "result": "obecny_strop", "text": "Platí obecný strop: 0,25 % za každý započatý rok do konce fixace, maximálně 1 % z předčasně splacené částky (v rámci zákonných limitů)." }
+      }
+    ]
+  }
+}

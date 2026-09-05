@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "layer": "Zákonná / programová data — státní podpora bydlení",
+    "verifiedAt": "2026-09-05",
+    "note": "Stav programů Státního fondu podpory investic (SFPI). Poskytování podpory vlastnického bydlení fyzickým osobám bylo zastaveno; program „Vlastní bydlení“ je archivován. Obsah je dynamický dle stavu — před publikací ověřit na sfpi.cz.",
+    "disclaimer": "Dostupnost a podmínky programů se mění. Aktuální stav vždy ověřte přímo u SFPI."
+  },
+  "programs": [
+    {
+      "id": "vlastni_bydleni",
+      "name": "Vlastní bydlení",
+      "status": "archivovano",
+      "statusLabel": "Archivováno",
+      "confidence": "zakon",
+      "audience": "fyzické osoby (dříve i mladí do 36 let)",
+      "verifiedAt": "2026-09-05",
+      "source": "SFPI",
+      "sourceUrl": "https://sfpi.cz/",
+      "note": "Program byl přesunut do archivu; poskytování podpory vlastnického bydlení fyzickým osobám bylo zastaveno.",
+      "means": "Na tento program se aktuálně nelze nově přihlásit. Nespoléhejte na něj při plánování financování.",
+      "next": "Ověřte aktuální nabídku programů přímo na sfpi.cz."
+    },
+    {
+      "id": "program_pro_mlade",
+      "name": "Program pro mladé (stávající příjemci)",
+      "status": "pouze_stavajici",
+      "statusLabel": "Pouze pro stávající smlouvy",
+      "confidence": "zakon",
+      "audience": "stávající příjemci starších programů",
+      "verifiedAt": "2026-09-05",
+      "source": "SFPI",
+      "sourceUrl": "https://sfpi.cz/",
+      "note": "Informace nadále relevantní pro stávající příjemce starších programů; pro nové žadatele není otevřen.",
+      "means": "Pokud už čerpáte, platí vaše původní podmínky. Noví žadatelé se hlásit nemohou.",
+      "next": "Stávající příjemci najdou podmínky ve své smlouvě a na sfpi.cz."
+    }
+  ],
+  "statusLegend": {
+    "otevreno": "Aktuálně otevřeno — lze žádat",
+    "uzavreno": "Aktuálně uzavřeno — dočasně nelze žádat",
+    "pouze_stavajici": "Pouze pro stávající smlouvy",
+    "archivovano": "Archivováno — program ukončen"
+  }
+}

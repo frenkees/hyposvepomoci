@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "layer": "Edukační obsah — slovníček",
+    "verifiedAt": "2026-09-05",
+    "note": "Každý pojem má „short“ (rychlé vysvětlení jednou větou) a „deep“ (pro toho, kdo tomu chce opravdu rozumět)."
+  },
+  "terms": [
+    {
+      "term": "Anuita",
+      "short": "Pravidelná splátka ve stejné výši po celou dobu, kde se postupně mění poměr úroku a jistiny.",
+      "deep": "Na začátku tvoří většinu splátky úrok a jen málo jistiny. Postupně se poměr obrací — ke konci splácíte hlavně jistinu. Proto mimořádná splátka na začátku uspoří na úrocích nejvíc."
+    },
+    {
+      "term": "Jistina",
+      "short": "Půjčená částka, kterou postupně splácíte (bez úroků).",
+      "deep": "Zbývající jistina je to, co byste museli doplatit při úplném splacení. Klesá pomalu na začátku a rychle na konci splácení."
+    },
+    {
+      "term": "Fixace",
+      "short": "Doba, po kterou máte sjednanou (neměnnou) úrokovou sazbu.",
+      "deep": "Co se stane na konci fixace? Banka nabídne novou sazbu — nemusí být nejvýhodnější. Můžete přijmout, refinancovat u jiné banky nebo mimořádně splatit, obvykle bez sankce. Refinancování začněte řešit několik měsíců před koncem fixace."
+    },
+    {
+      "term": "LTV",
+      "short": "Poměr výše úvěru k hodnotě zajištění (odhadu), v procentech.",
+      "deep": "Počítá se vůči ODHADNÍ hodnotě, ne automaticky vůči kupní ceně. Když je odhad nižší než cena, LTV vyjde vyšší, než čekáte. Závazný limit je 80 % (90 % pro žadatele do 36 let na vlastní bydlení)."
+    },
+    {
+      "term": "DSTI",
+      "short": "Podíl měsíční splátky všech dluhů na čistém měsíčním příjmu.",
+      "deep": "Aktuálně není závazným limitem — ČNB doporučuje obezřetnost nad 40 %. Ukazuje, jak velkou část příjmu spolknou splátky. Nízké DSTI = větší bezpečnostní rezerva."
+    },
+    {
+      "term": "DTI",
+      "short": "Podíl celkového dluhu na čistém ročním příjmu (kolikanásobek).",
+      "deep": "Aktuálně není závazným limitem — ČNB doporučuje obezřetnost nad 8násobkem (7× u investičních nemovitostí od 1. 4. 2026)."
+    },
+    {
+      "term": "RPSN",
+      "short": "Roční procentní sazba nákladů — skutečná cena úvěru včetně poplatků.",
+      "deep": "Na rozdíl od úrokové sazby zahrnuje i poplatky a povinné náklady. Dvě nabídky se stejným úrokem mohou mít různé RPSN. Porovnávejte podle RPSN, ne jen podle úroku."
+    },
+    {
+      "term": "Úroková sazba",
+      "short": "Cena za půjčení peněz vyjádřená v procentech ročně.",
+      "deep": "Nabídnutou sazbu ovlivňuje měnová politika, tržní sazby, náklady financování banky a vaše rizikovost. Zvýhodněná sazba bývá podmíněná (účet, pojištění) — ověřte podmínky."
+    },
+    {
+      "term": "Refinancování",
+      "short": "Převedení hypotéky k jiné bance (nebo nové podmínky u stávající) za výhodnějších podmínek.",
+      "deep": "Má smysl, když úspora na úrocích převáží náklady (nový odhad, zápis zástavního práva, administrativa). Rozhoduje break-even — za jak dlouho se náklady vrátí."
+    },
+    {
+      "term": "Vinkulace",
+      "short": "Pojistné plnění je v případě škody vypláceno ve prospěch banky.",
+      "deep": "Banka požaduje pojištění nemovitosti vinkulované ve svůj prospěch jako ochranu zástavy. Pojištění nemovitosti bývá povinné; životní pojištění zpravidla ne (často jen podmínka zvýhodněné sazby)."
+    },
+    {
+      "term": "Zástavní právo",
+      "short": "Právo banky na uspokojení z nemovitosti, pokud nesplácíte.",
+      "deep": "Zapisuje se do katastru nemovitostí. Po splacení úvěru je potřeba nechat zástavní právo vymazat."
+    },
+    {
+      "term": "Katastr nemovitostí",
+      "short": "Veřejný registr nemovitostí a práv k nim.",
+      "deep": "Zápis vkladu má zákonnou ochrannou lhůtu (vklad nejdříve po 20 dnech od plomby); reálná doba bývá delší a mění se v čase."
+    },
+    {
+      "term": "Plomba",
+      "short": "Vyznačení, že u nemovitosti probíhá řízení o zápisu (podán návrh na vklad).",
+      "deep": "Banka na základě plomby často uvolní peníze ještě před dokončením zápisu zástavního práva."
+    },
+    {
+      "term": "BRKI / NRKI",
+      "short": "Bankovní a nebankovní registr klientských informací (úvěrová historie).",
+      "deep": "Banky si v nich ověřují vaše dosavadní úvěry a platební historii. Negativní záznamy mohou schválení zkomplikovat."
+    },
+    {
+      "term": "PRIBOR",
+      "short": "Referenční úroková sazba na českém mezibankovním trhu.",
+      "deep": "Ovlivňuje především sazby s krátkou fixací a variabilní úvěry. U dlouhých fixací hrají větší roli tržní sazby a náklady financování banky."
+    },
+    {
+      "term": "Odhad (ocenění nemovitosti)",
+      "short": "Stanovení hodnoty zajištění, ze které banka počítá LTV.",
+      "deep": "U bytů ve městech banky často dělají online (desktopový) odhad zdarma z cenových map. Vlastní posudek si nechte dělat až po dohodě s bankou — nemusí ho akceptovat."
+    }
+  ]
+}
