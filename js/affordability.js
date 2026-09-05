@@ -141,9 +141,10 @@
     var bn = C.detectBottleneck({ ltv: ltv, ltvMax: maxLtv(), dsti: dsti, dstiThr: dstiThr(), reserveAfter: reserveAfter, monthlyPayment: pay });
     var bnClass = bn.level === "red" ? "note--critical" : (bn.level === "amber" ? "note--warn" : "note--tip");
     var bnIcon = bn.level === "red" ? "🔴" : (bn.level === "amber" ? "🟠" : "🟢");
+    var bnLink = bn.key === "vlastni_zdroje" ? '<p style="margin-top:var(--sp-2)"><a href="#vlastni-zdroje">Co s nedostatkem vlastních zdrojů? →</a></p>' : "";
     root.querySelector("[data-aff-bottleneck]").innerHTML =
       '<h3 style="margin-top:var(--sp-8)">Co vás nejvíc omezuje?</h3>' +
-      '<div class="note ' + bnClass + '"><div class="note__title">' + bnIcon + ' ' + bn.title + '</div><p>' + bn.text + '</p></div>';
+      '<div class="note ' + bnClass + '"><div class="note__title">' + bnIcon + ' ' + bn.title + '</div><p>' + bn.text + '</p>' + bnLink + '</div>';
 
     // Personalizovaná karta
     var neededOwn = rozumny.maxProperty * (1 - maxLtv() / 100);

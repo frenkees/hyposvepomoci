@@ -142,6 +142,32 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("bottleneck: vysoké DSTI = red příjem", inc.level === "red" && inc.key === "prijem", JSON.stringify(inc));
 })();
 
+/* 13c) Dodatečná zástava — LTV vůči více nemovitostem. */
+(function () {
+  var r = C.combinedLtv(4500000, 5000000, 2000000);
+  ok("combinedLtv: ltvMain 4.5M/5M = 90 %", approx(r.ltvMain, 90, 0.01), r.ltvMain.toFixed(2));
+  ok("combinedLtv: ltvCombined 4.5M/7M ≈ 64.29 %", approx(r.ltvCombined, 64.2857, 0.01), r.ltvCombined.toFixed(4));
+  ok("combinedLtv: dodatečná zástava sníží LTV", r.ltvCombined < r.ltvMain);
+})();
+
+/* 13d) Nižší ocenění — vyšší potřebné vlastní zdroje. */
+(function () {
+  var r = C.lowerAppraisalImpact(5000000, 4700000, 80);
+  // needed at price = 5M-4M = 1M; at appraisal = 5M-3.76M = 1.24M; extra = 240k
+  ok("nižší ocenění: needed at price = 1M", approx(r.neededAtPrice, 1000000, 1), r.neededAtPrice.toFixed(0));
+  ok("nižší ocenění: needed at appraisal = 1.24M", approx(r.neededAtAppraisal, 1240000, 1), r.neededAtAppraisal.toFixed(0));
+  ok("nižší ocenění: extra needed = 240k", approx(r.extraNeeded, 240000, 1), r.extraNeeded.toFixed(0));
+})();
+
+/* 13e) Konsolidace. */
+(function () {
+  var r = C.consolidation({ mortgage: 4400000, otherDebts: [{ amount: 100000, monthlyPayment: 3000 }], newRate: 5, newTermMonths: 360 });
+  ok("konsolidace: after je jeden úvěr", r.after.count === 1, r.after.count);
+  ok("konsolidace: celkový dluh = hypotéka + ostatní", approx(r.after.totalDebt, 4500000, 1), r.after.totalDebt);
+  ok("konsolidace: po je zajištěno nemovitostí", r.after.secured === true);
+  ok("konsolidace: delší splatnost snižuje měsíční zatížení", r.monthlySaving > 0, r.monthlySaving.toFixed(0));
+})();
+
 /* 13) URL state — round trip. */
 (function () {
   var params = { cena: 5000000, vlastni: 1200000, uver: 3800000, sazba: 4.5, doba: 30, typ: "vlastni", mlady: true };

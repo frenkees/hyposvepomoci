@@ -254,6 +254,63 @@
     return (red[0] || problems[0]);
   }
 
+  /**
+   * Dodatečná zástava — LTV vůči hodnotě VÍCE zastavených nemovitostí.
+   * Vrací { ltvMain, ltvCombined, combinedValue }.
+   */
+  function combinedLtv(loanAmount, mainValue, additionalValue) {
+    var combined = (mainValue || 0) + (additionalValue || 0);
+    return {
+      ltvMain: mainValue > 0 ? (loanAmount / mainValue) * 100 : 0,
+      ltvCombined: combined > 0 ? (loanAmount / combined) * 100 : 0,
+      combinedValue: combined
+    };
+  }
+
+  /**
+   * Dopad nižšího bankovního ocenění na potřebné vlastní zdroje.
+   * Vrací { neededAtPrice, neededAtAppraisal, extraNeeded } (akontace + rozdíl).
+   * Potřebná akontace = cena − (ocenění × LTVmax). Když je ocenění nižší, akontace roste.
+   */
+  function lowerAppraisalImpact(price, appraisal, ltvMax) {
+    var maxLoanByPrice = price * (ltvMax / 100);
+    var maxLoanByAppraisal = appraisal * (ltvMax / 100);
+    // Kolik vlastních zdrojů je potřeba, aby úvěr nepřekročil LTV vůči danému ocenění.
+    var neededAtPrice = Math.max(0, price - maxLoanByPrice);
+    var neededAtAppraisal = Math.max(0, price - maxLoanByAppraisal);
+    return {
+      neededAtPrice: neededAtPrice,
+      neededAtAppraisal: neededAtAppraisal,
+      extraNeeded: Math.max(0, neededAtAppraisal - neededAtPrice)
+    };
+  }
+
+  /**
+   * Konsolidace — sloučení hypotéky a dalších dluhů do jednoho zajištěného úvěru.
+   * params: { mortgage, otherDebts:[{amount, monthlyPayment}], newRate, newTermMonths }
+   * Vrací before/after souhrny. Delší splatnost sníží splátku, ale nesnižuje dluh;
+   * původně nezajištěný dluh je po konsolidaci zajištěn nemovitostí.
+   */
+  function consolidation(params) {
+    var mortgage = params.mortgage || 0;
+    var others = params.otherDebts || [];
+    var newRate = params.newRate || 0;
+    var newTerm = params.newTermMonths || 360;
+
+    var otherTotal = others.reduce(function (a, d) { return a + (d.amount || 0); }, 0);
+    var otherMonthly = others.reduce(function (a, d) { return a + (d.monthlyPayment || 0); }, 0);
+    var mortgageMonthly = calculateMonthlyPayment(mortgage, newRate, newTerm);
+
+    var newTotal = mortgage + otherTotal;
+    var newMonthly = calculateMonthlyPayment(newTotal, newRate, newTerm);
+
+    return {
+      before: { count: 1 + others.length, totalDebt: newTotal, totalMonthly: mortgageMonthly + otherMonthly },
+      after: { count: 1, totalDebt: newTotal, monthly: newMonthly, termMonths: newTerm, secured: true },
+      monthlySaving: (mortgageMonthly + otherMonthly) - newMonthly
+    };
+  }
+
   /* --- URL state (sdílení scénáře odkazem) --- */
   var STATE_KEYS = ["cena", "odhad", "vlastni", "uver", "sazba", "doba", "typ", "mlady",
                     "fixace", "sazbaPo", "extraMesic", "prijem", "vydaje", "zavazky"];
@@ -295,6 +352,9 @@
     calculateRefinancingBreakeven: calculateRefinancingBreakeven,
     maxAffordableProperty: maxAffordableProperty,
     detectBottleneck: detectBottleneck,
+    combinedLtv: combinedLtv,
+    lowerAppraisalImpact: lowerAppraisalImpact,
+    consolidation: consolidation,
     stressTestRate: stressTestRate,
     stressTestIncome: stressTestIncome,
     serializeState: serializeState,

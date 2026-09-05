@@ -59,6 +59,7 @@
         <li><a href="#podminky">Podmínky ČNB</a></li>
         <li><a href="#uroky">Úroky a fixace</a></li>
         <li><a href="#pozor">Na co si dát pozor</a></li>
+        <li><a href="#vlastni-zdroje">Nemám dost vlastních zdrojů</a></li>
         <li><a href="#predcasne">Předčasné splacení</a></li>
         <li><a href="#dane">Daňové odpočty</a></li>
         <li><a href="#kalkulacka">Kalkulačka</a></li>
@@ -292,6 +293,28 @@
       </div>
     </section>
 
+    <!-- Nemám dost vlastních zdrojů (P2) -->
+    <section class="section" id="vlastni-zdroje">
+      <div class="container">
+        <h2>Nemám dost vlastních peněz. Co můžu udělat?</h2>
+        <p class="section__lead">Bez slibů o „obcházení pravidel“. Banka nikdy nepůjčí 100 % hodnoty a limit <button class="term" data-term="ltv">LTV</button> je závazný. Tady jsou legitimní cesty, jak nedostatek <button class="term" data-term="vlastni-zdroje">vlastních zdrojů</button> řešit — s jejich výhodami, nevýhodami a riziky.</p>
+
+        <div class="grid grid--2" id="equity-options"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: dodatečná nemovitost do zástavy</h3>
+        <p class="text-muted">LTV se počítá vůči hodnotě <em>všech</em> zastavených nemovitostí. Přidání další nemovitosti tak může LTV snížit — ale ta nemovitost je pak také v ohrožení.</p>
+        <div class="card" id="tool-zastava"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: co když banka ocení nemovitost levněji?</h3>
+        <p class="text-muted">LTV se počítá z <button class="term" data-term="odhad">odhadu</button>, ne z kupní ceny. Nižší ocenění zvyšuje potřebné vlastní zdroje.</p>
+        <div class="card" id="tool-ocenene"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: konsolidace jiných dluhů do hypotéky</h3>
+        <p class="text-muted">Sloučení hypotéky a dalších úvěrů může snížit měsíční zatížení díky delší splatnosti — samo o sobě ale dluh nesnižuje a původně nezajištěný dluh je pak zajištěn nemovitostí.</p>
+        <div class="card" id="tool-konsolidace"></div>
+      </div>
+    </section>
+
     <!-- Nástroje (Fáze 3) -->
     <section class="section" id="nastroje">
       <div class="container">
@@ -372,6 +395,7 @@
   <script src="js/calculator-core.js"></script>
   <script src="js/calculator-ui.js"></script>
   <script src="js/affordability.js"></script>
+  <script src="js/equity.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/tax-calculator.js"></script>
   <script src="js/early-repayment.js"></script>
