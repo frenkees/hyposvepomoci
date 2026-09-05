@@ -1,0 +1,33 @@
+/* ==========================================================================
+   print.css — Tisk / uložení do PDF (Fáze 4)
+   Mechanismus PDF exportu: prohlížeč „Vytisknout → Uložit jako PDF“.
+   ========================================================================== */
+
+@media print {
+  :root { --shadow-sm: none; --shadow-md: none; }
+  body { background: #fff; color: #000; font-size: 12pt; }
+
+  /* Skrýt navigační a ovládací prvky. */
+  .nav, .hero, .footer__meta, .skip-link,
+  .btn, .calc__share, .calc__advanced-toggle,
+  input[type="range"], .journey, .premium-cta { display: none !important; }
+
+  a { color: #000; text-decoration: none; }
+  .section { padding: 12pt 0; }
+  .section:nth-child(even) { background: #fff; }
+  .card, .metric, .view, .abc__card { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+
+  /* Grafy se do PDF netisknou spolehlivě — spoléháme na tabulky/čísla. */
+  .chart-card__canvas { display: none; }
+  .stress table, .amort table { break-inside: auto; }
+  tr { break-inside: avoid; }
+
+  /* Režim „vytisknout jen kalkulačku“ (tlačítko v kalkulačce). */
+  body.print-calc > main > section:not(#kalkulacka),
+  body.print-calc > .hero,
+  body.print-calc > .footer { display: none !important; }
+  body.print-calc .calc { display: block; }
+  body.print-calc .calc__inputs { margin-bottom: 12pt; }
+
+  @page { margin: 16mm; }
+}

@@ -106,6 +106,7 @@
           '</div>' +
           '<div class="calc__share">' +
             '<button type="button" class="btn btn--ghost" data-copy>🔗 Zkopírovat odkaz na scénář</button>' +
+            '<button type="button" class="btn btn--ghost" data-print>🖨️ Vytisknout / uložit PDF</button>' +
           '</div>' +
         '</form>' +
         '<div class="calc__outputs">' +
@@ -365,6 +366,13 @@
       var open = !adv.hidden; adv.hidden = open;
       advToggle.setAttribute("aria-expanded", String(!open));
       advToggle.textContent = open ? "Pokročilé nastavení ▾" : "Pokročilé nastavení ▴";
+    });
+
+    var printBtn = root.querySelector("[data-print]");
+    if (printBtn) printBtn.addEventListener("click", function () {
+      document.body.classList.add("print-calc");
+      window.print();
+      setTimeout(function () { document.body.classList.remove("print-calc"); }, 500);
     });
 
     root.querySelector("[data-copy]").addEventListener("click", function (e) {
