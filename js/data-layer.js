@@ -32,10 +32,32 @@
     rada:       { label: "PRAKTICKÁ RADA", cls: "confidence--rada",    title: "Praktická rada autora webu" }
   };
 
+  /*
+   * FALLBACK_FACTS — vestavěná záložní kopie klíčových hodnot přímo v datové vrstvě.
+   * Pojistka pro případ, že se data/*.json nepodaří načíst (výpadek sítě, špatná
+   * cesta na hostingu apod.). Díky ní se fakt NIKDY nevykreslí prázdný.
+   * Toto je součást datové vrstvy, ne UI — pravidlo „žádné hodnoty natvrdo v HTML“ platí dál.
+   * Zdroj hodnot je totožný s data/regulatory.json | tax.json | early-repayment.json (verifiedAt 2026-09-05).
+   */
+  var FALLBACK_FACTS = {
+    ltv_owner_standard: { value: 80, unit: "%", binding: true, confidence: "zakon", source: "ČNB", verifiedAt: "2026-09-05", note: "Závazný limit LTV pro vlastní bydlení.", means: "alespoň 20 % hodnoty zajištění z vlastních zdrojů" },
+    ltv_owner_young: { value: 90, unit: "%", binding: true, confidence: "zakon", source: "ČNB", verifiedAt: "2026-09-05", note: "Zvýšený limit LTV pro žadatele do 36 let na vlastní bydlení." },
+    ltv_investment: { value: 70, unit: "%", binding: false, confidence: "doporuceni", source: "ČNB — doporučení", verifiedAt: "2026-09-05", note: "Doporučená hranice LTV pro investiční nemovitosti (od 1. 4. 2026)." },
+    dsti_recommendation: { value: 40, unit: "%", binding: false, confidence: "doporuceni", source: "ČNB — doporučení", verifiedAt: "2026-09-05", note: "DSTI není závazný limit; ČNB doporučuje obezřetnost nad 40 %.", means: "Vyšší DSTI neznamená automatické zamítnutí — nad 40 % je vhodná opatrnost." },
+    dti_recommendation: { value: 8, unit: "×", binding: false, confidence: "doporuceni", source: "ČNB — doporučení", verifiedAt: "2026-09-05", note: "DTI není závazný limit; ČNB doporučuje obezřetnost nad 8násobkem.", means: "Celkový dluh nad 8× ročního čistého příjmu je rizikovější, není ale vyloučen." },
+    dti_investment: { value: 7, unit: "×", binding: false, confidence: "doporuceni", source: "ČNB — doporučení", verifiedAt: "2026-09-05", note: "Přísnější doporučení DTI pro investiční nemovitosti (od 1. 4. 2026)." },
+    katastr_ochranna_lhuta: { value: 20, unit: "dnů", binding: true, confidence: "zakon", source: "ČÚZK", verifiedAt: "2026-09-05", note: "Vklad lze povolit nejdříve po 20 dnech od plomby; reálná doba bývá delší." },
+    obecny_strop_procenta: { value: 0.25, unit: "% za každý rok do konce fixace", binding: true, confidence: "zakon", source: "Zákon č. 257/2016 Sb.; MF ČR", verifiedAt: "2026-09-05", note: "Obecný strop náhrady nákladů při předčasném splacení." },
+    obecny_strop_maximum: { value: 1, unit: "% z předčasně splacené částky", binding: true, confidence: "zakon", source: "Zákon č. 257/2016 Sb.; MF ČR", verifiedAt: "2026-09-05", note: "Horní strop náhrady účelně vynaložených nákladů." },
+    odpocet_limit_do_2020: { value: 300000, unit: "Kč / rok", binding: true, confidence: "zakon", source: "Zákon č. 586/1992 Sb.; Finanční správa", verifiedAt: "2026-09-05", note: "Limit odpočtu úroků pro bytovou potřebu obstaranou do konce 2020." },
+    odpocet_limit_od_2021: { value: 150000, unit: "Kč / rok", binding: true, confidence: "zakon", source: "Zákon č. 586/1992 Sb.; Finanční správa", verifiedAt: "2026-09-05", note: "Limit odpočtu úroků pro bytovou potřebu obstaranou od 1. 1. 2021." }
+  };
+
   var HypoData = {
     loaded: false,
+    usingFallback: false,
     data: {},
-    /** Vrátí jeden fakt podle klíče (hledá napříč regulatory/tax). */
+    /** Vrátí jeden fakt podle klíče (hledá napříč regulatory/tax/earlyRepayment, pak fallback). */
     getFact: function (key) {
       var reg = this.data.regulatory && this.data.regulatory.facts;
       if (reg && reg[key]) return reg[key];
@@ -43,6 +65,7 @@
       if (tax && tax[key]) return tax[key];
       var er = this.data.earlyRepayment && this.data.earlyRepayment.facts;
       if (er && er[key]) return er[key];
+      if (FALLBACK_FACTS[key]) return FALLBACK_FACTS[key];
       return null;
     }
   };
@@ -88,19 +111,24 @@
     if (!key) return;
     var fact = HypoData.getFact(key);
     if (!fact) {
+      // Nikdy nenecháme prázdno — raději neutrální placeholder + vysvětlení v tooltipu.
+      el.textContent = "údaj se nepodařilo načíst";
       el.classList.add("fact--missing");
-      el.setAttribute("title", "Chybí data pro: " + key);
+      el.setAttribute("title", "Aktuální údaj se nepodařilo načíst (" + key + ").");
       return;
     }
 
     var part = el.getAttribute("data-part") || "value";
-    var text = "";
+    var valueText = (fact.value != null && !isNaN(fact.value))
+      ? formatNumber(fact.value) + (fact.unit ? " " + fact.unit : "")
+      : "údaj se nepodařilo načíst";
+    var text;
     if (part === "value") {
-      text = formatNumber(fact.value) + (fact.unit ? " " + fact.unit : "");
-    } else if (fact[part] != null) {
+      text = valueText;
+    } else if (fact[part] != null && String(fact[part]).length) {
       text = String(fact[part]);
     } else {
-      text = formatNumber(fact.value) + (fact.unit ? " " + fact.unit : "");
+      text = valueText; // fallback na hodnotu, když daná část (means/next) chybí
     }
 
     el.textContent = text;
@@ -176,13 +204,22 @@
         document.dispatchEvent(new CustomEvent("hypodata:ready", { detail: HypoData }));
       })
       .catch(function (err) {
-        // Bez datové vrstvy web nesmí zobrazovat nepodložená čísla — jasně to oznámíme.
+        // Fetch selhal (výpadek sítě, špatná cesta na hostingu, file://…).
+        // Web NESMÍ zůstat s prázdnými hodnotami — vyplníme fakty z vestavěného fallbacku.
+        HypoData.loaded = true;
+        HypoData.usingFallback = true;
+        window.HypoData = HypoData;
+
+        fillAllFacts(document);
+
         var banner = document.querySelector("[data-currency-layers]");
         if (banner) {
-          banner.textContent = "Data se nepodařilo načíst. Web musí běžet přes HTTP server (ne přímo ze souboru).";
+          banner.textContent = "Zobrazeny poslední ověřené hodnoty (2026-09-05). Aktuální data se nepodařilo načíst.";
           banner.classList.add("currency-layers--error");
         }
-        if (window.console) console.error("[data-layer] " + err.message);
+        // Ostatní moduly (kalkulačka) se spustí i tak — mají vlastní fallbacky.
+        document.dispatchEvent(new CustomEvent("hypodata:ready", { detail: HypoData }));
+        if (window.console) console.warn("[data-layer] fallback: " + err.message);
       });
   }
 
