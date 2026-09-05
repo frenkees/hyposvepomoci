@@ -183,6 +183,77 @@
     });
   }
 
+  /**
+   * (Režim B) Jak drahou nemovitost si můžu dovolit — z příjmu, úspor a rezervy.
+   * Vrací maximální cenu nemovitosti při daném limitu LTV a prahu DSTI/DTI.
+   * params: { netIncome, obligations, savings, reserve, termMonths, rate, ltvMax, dstiMax, dtiMax }
+   * Vrací: { maxProperty, loan, ownForPurchase, maxLoanByIncome, pByLtv, pByIncome, bottleneck }
+   *   bottleneck: "vlastni_zdroje" | "prijem" — co omezuje víc.
+   */
+  function maxAffordableProperty(params) {
+    var netIncome = params.netIncome || 0;
+    var obligations = params.obligations || 0;
+    var savings = params.savings || 0;
+    var reserve = params.reserve || 0;
+    var termMonths = params.termMonths || 360;
+    var rate = params.rate || 0;
+    var ltvMax = params.ltvMax || 80;
+    var dstiMax = params.dstiMax || 40;
+    var dtiMax = params.dtiMax || 8;
+
+    var ownForPurchase = Math.max(0, savings - reserve);
+    var maxLoanByIncome = calculateMaxLoan(netIncome, obligations, rate, termMonths, { dsti: dstiMax, dti: dtiMax }).maxLoan;
+
+    // Omezení výší úvěru vůči LTV: cena ≤ vlastní_na_nákup / (1 − LTVmax).
+    var pByLtv = ltvMax < 100 ? ownForPurchase / (1 - ltvMax / 100) : Infinity;
+    // Omezení příjmem: cena ≤ max_úvěr + vlastní_na_nákup.
+    var pByIncome = maxLoanByIncome + ownForPurchase;
+
+    var maxProperty = Math.max(0, Math.min(pByLtv, pByIncome));
+    var loan = Math.max(0, maxProperty - ownForPurchase);
+
+    return {
+      maxProperty: maxProperty,
+      loan: loan,
+      ownForPurchase: ownForPurchase,
+      maxLoanByIncome: maxLoanByIncome,
+      pByLtv: pByLtv,
+      pByIncome: pByIncome,
+      bottleneck: pByIncome <= pByLtv ? "prijem" : "vlastni_zdroje"
+    };
+  }
+
+  /**
+   * Bottleneck engine — najde hlavní omezení situace a vrátí lidský popis.
+   * s: { ltv, ltvMax, dsti, dstiThr, dti, dtiThr, reserveAfter, monthlyPayment, remainingAfterCosts }
+   * Vrací: { level: "green|amber|red", key, title, text } — nejzávažnější nález.
+   */
+  function detectBottleneck(s) {
+    var problems = [];
+    function add(level, key, title, text) { problems.push({ level: level, key: key, title: title, text: text }); }
+
+    if (s.ltv != null && s.ltvMax != null) {
+      if (s.ltv > s.ltvMax + 0.01) add("red", "vlastni_zdroje", "Vlastní zdroje / LTV", "Úvěr přesahuje závazný limit LTV " + s.ltvMax + " %. Potřebujete víc vlastních zdrojů, levnější nemovitost nebo jiné zajištění.");
+      else if (s.ltv > s.ltvMax - 5) add("amber", "ltv", "LTV u hranice", "Jste těsně pod limitem " + s.ltvMax + " %. Nižší bankovní ocenění by vás mohlo dostat nad limit.");
+    }
+    if (s.reserveAfter != null) {
+      if (s.reserveAfter < 0) add("red", "vlastni_zdroje", "Nedostatek vlastních prostředků", "Úspory nepokryjí akontaci a náklady koupě. Chybí přibližně " + Math.round(-s.reserveAfter) + " Kč.");
+      else if (s.monthlyPayment && s.reserveAfter < s.monthlyPayment * 3) add("amber", "rezerva", "Nízká rezerva po koupi", "Po koupi zbývá málo hotovosti. Zdravá rezerva bývá 3–6 měsíčních splátek.");
+    }
+    if (s.dsti != null && s.dstiThr != null) {
+      if (s.dsti > s.dstiThr + 10) add("red", "prijem", "Vysoké příjmové zatížení", "Splátky by braly velkou část příjmu (DSTI ~" + Math.round(s.dsti) + " %). Zvažte nižší úvěr nebo delší splatnost.");
+      else if (s.dsti > s.dstiThr) add("amber", "prijem", "Zvýšené příjmové zatížení", "DSTI ~" + Math.round(s.dsti) + " % je nad doporučenou obezřetností " + s.dstiThr + " %.");
+    }
+    if (s.remainingAfterCosts != null && s.remainingAfterCosts < 0) {
+      add("red", "prijem", "Nevychází rozpočet", "Po splátce a běžných výdajích by domácnosti nezbývalo nic. Scénář je nad vaše síly.");
+    }
+
+    if (!problems.length) return { level: "green", key: "ok", title: "Zásadní překážku nevidíme", text: "Podle zadaných parametrů situace vypadá zdravě. Ověřte si detaily a porovnejte více nabídek." };
+    // Nejzávažnější: nejdřív red, pak amber; v rámci úrovně první nalezený.
+    var red = problems.filter(function (p) { return p.level === "red"; });
+    return (red[0] || problems[0]);
+  }
+
   /* --- URL state (sdílení scénáře odkazem) --- */
   var STATE_KEYS = ["cena", "odhad", "vlastni", "uver", "sazba", "doba", "typ", "mlady",
                     "fixace", "sazbaPo", "extraMesic", "prijem", "vydaje", "zavazky"];
@@ -222,6 +293,8 @@
     calculateAffordability: calculateAffordability,
     calculateCashAfterPurchase: calculateCashAfterPurchase,
     calculateRefinancingBreakeven: calculateRefinancingBreakeven,
+    maxAffordableProperty: maxAffordableProperty,
+    detectBottleneck: detectBottleneck,
     stressTestRate: stressTestRate,
     stressTestIncome: stressTestIncome,
     serializeState: serializeState,

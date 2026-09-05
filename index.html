@@ -280,7 +280,14 @@
       <div class="container">
         <h2>Hypoteční kalkulačka</h2>
         <p class="section__lead">Spočítejte si splátku, LTV vůči odhadu, rezervu po koupi i to, kolik si můžete <strong>bezpečně</strong> dovolit. Scénář můžete sdílet odkazem.</p>
-        <div id="calculator-root"><p class="placeholder">Načítám kalkulačku…</p></div>
+
+        <div class="calc-mode" role="group" aria-label="Režim kalkulačky">
+          <button type="button" class="calc-mode__btn" data-mode="B" aria-pressed="true">🔎 Teprve hledám nemovitost</button>
+          <button type="button" class="calc-mode__btn" data-mode="A" aria-pressed="false">🏠 Mám vybranou nemovitost</button>
+        </div>
+
+        <div id="affordability-root"><p class="placeholder">Načítám diagnostiku…</p></div>
+        <div id="calculator-root" hidden><p class="placeholder">Načítám kalkulačku…</p></div>
       </div>
     </section>
 
@@ -362,6 +369,7 @@
   <script src="js/readiness-guide.js"></script>
   <script src="js/calculator-core.js"></script>
   <script src="js/calculator-ui.js"></script>
+  <script src="js/affordability.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/tax-calculator.js"></script>
   <script src="js/early-repayment.js"></script>

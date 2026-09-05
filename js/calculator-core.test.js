@@ -116,6 +116,32 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("příjmový šok: zbytek klesne", inc[0].remaining < (70000 - 25000 - 3000 - 20000));
 })();
 
+/* 13a) Režim B — dostupná cena nemovitosti. */
+(function () {
+  // Vysoký příjem, málo úspor → omezují vlastní zdroje.
+  var r = C.maxAffordableProperty({ netIncome: 90000, obligations: 0, savings: 300000, reserve: 100000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
+  ok("Režim B: maxProperty > 0", r.maxProperty > 0, r.maxProperty.toFixed(0));
+  ok("Režim B: ownForPurchase = savings−reserve", approx(r.ownForPurchase, 200000, 0.01), r.ownForPurchase);
+  // ownForPurchase 200k, LTV 80% → pByLtv = 200k/0.2 = 1,000,000
+  ok("Režim B: pByLtv = own/(1−LTV)", approx(r.pByLtv, 1000000, 1), r.pByLtv.toFixed(0));
+  ok("Režim B: nízké úspory → bottleneck vlastní zdroje", r.bottleneck === "vlastni_zdroje", r.bottleneck);
+
+  // Nízký příjem, dost úspor → omezuje příjem.
+  var r2 = C.maxAffordableProperty({ netIncome: 35000, obligations: 5000, savings: 3000000, reserve: 200000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
+  ok("Režim B: vysoké úspory → bottleneck příjem", r2.bottleneck === "prijem", r2.bottleneck);
+  ok("Režim B: loan = maxProperty − own", approx(r2.loan, r2.maxProperty - r2.ownForPurchase, 1));
+})();
+
+/* 13b) Bottleneck engine. */
+(function () {
+  var over = C.detectBottleneck({ ltv: 92, ltvMax: 80, dsti: 30, dstiThr: 40, reserveAfter: 500000, monthlyPayment: 20000 });
+  ok("bottleneck: LTV nad limitem = red vlastní zdroje", over.level === "red" && over.key === "vlastni_zdroje", JSON.stringify(over));
+  var ok1 = C.detectBottleneck({ ltv: 60, ltvMax: 80, dsti: 25, dstiThr: 40, reserveAfter: 600000, monthlyPayment: 20000 });
+  ok("bottleneck: zdravá situace = green", ok1.level === "green", JSON.stringify(ok1));
+  var inc = C.detectBottleneck({ ltv: 70, ltvMax: 80, dsti: 55, dstiThr: 40, reserveAfter: 400000, monthlyPayment: 20000 });
+  ok("bottleneck: vysoké DSTI = red příjem", inc.level === "red" && inc.key === "prijem", JSON.stringify(inc));
+})();
+
 /* 13) URL state — round trip. */
 (function () {
   var params = { cena: 5000000, vlastni: 1200000, uver: 3800000, sazba: 4.5, doba: 30, typ: "vlastni", mlady: true };

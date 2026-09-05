@@ -20,6 +20,7 @@
     fixace: 5, sazbaPo: "", extraMesic: 0, prijem: 0, vydaje: 0, zavazky: 0
   };
 
+  var INITIAL_SEARCH = window.location.search; // snapshot dřív, než jiný modul přepíše URL
   var state = {};
   var touched = { odhad: false, uver: false };
   var root, rafId;
@@ -58,7 +59,7 @@
         if (pf.mlady != null) s.mlady = pf.mlady;
       }
     } catch (e) {}
-    var urlState = C.deserializeState(window.location.hash.indexOf("calc=") > -1 ? "" : window.location.search);
+    var urlState = C.deserializeState(INITIAL_SEARCH);
     Object.keys(urlState).forEach(function (k) { s[k] = urlState[k]; if (k === "odhad") touched.odhad = true; if (k === "uver") touched.uver = true; });
     return s;
   }
@@ -320,6 +321,8 @@
 
   /* --- URL --- */
   function updateUrl() {
+    var self = document.getElementById("calculator-root");
+    if (self && self.hidden) return; // píše jen aktivní režim
     var qs = C.serializeState({
       cena: state.cena, odhad: state.odhad, vlastni: state.vlastni, uver: state.uver,
       sazba: state.sazba, doba: state.doba, typ: state.typ, mlady: state.mlady,

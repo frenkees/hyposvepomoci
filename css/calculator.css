@@ -91,3 +91,33 @@
 .amort-table th { font-family: var(--font-heading); color: var(--color-text-secondary); text-align: right; }
 .amort-table th:first-child, .amort-table td:first-child { text-align: left; }
 .amort-table td { text-align: right; }
+
+/* --- Přepínač režimů A/B --- */
+.calc-mode { display: inline-flex; gap: var(--sp-1); background: var(--color-surface-alt); border-radius: var(--radius); padding: 4px; margin-bottom: var(--sp-6); flex-wrap: wrap; }
+.calc-mode__btn { border: none; background: transparent; padding: var(--sp-2) var(--sp-4); border-radius: var(--radius); font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; color: var(--color-text-secondary); cursor: pointer; min-height: 44px; }
+.calc-mode__btn[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: var(--shadow-sm); }
+
+/* --- Tři úrovně dostupnosti --- */
+.tiers { display: grid; gap: var(--sp-3); grid-template-columns: minmax(0,1fr); margin: var(--sp-4) 0; }
+@media (min-width: 640px) { .tiers { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.tier { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); background: var(--color-surface); }
+.tier--rozumny { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+.tier__label { font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; letter-spacing: .03em; color: var(--color-text-muted); text-transform: uppercase; }
+.tier__price { font-family: var(--font-heading); font-weight: 700; font-size: 1.5rem; color: var(--color-primary-dark); margin: var(--sp-1) 0; }
+.tier__meta { font-size: 0.85rem; color: var(--color-text-secondary); }
+.tier__note { font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--sp-2); }
+
+/* --- Personalizovaná hypoteční karta --- */
+.hcard { border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; }
+.hcard__row { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--color-border); }
+.hcard__row:last-child { border-bottom: none; }
+.hcard__row--strong { background: var(--color-surface-alt); font-family: var(--font-heading); font-weight: 700; }
+.hcard__row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+.hcard__v--neg { color: var(--color-danger); }
+.hcard__v--pos { color: var(--color-success); }
+.hcard__v--warn { color: var(--color-warning); }
+
+.how { margin-top: var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); }
+.how > summary { cursor: pointer; padding: var(--sp-3) var(--sp-4); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); }
+.how > div { padding: 0 var(--sp-4) var(--sp-4); }
+.confidence-note { font-size: 0.85rem; color: var(--color-text-muted); margin-top: var(--sp-3); }
