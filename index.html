@@ -56,6 +56,7 @@
         <li><a href="#pruvodce">Průvodce „Jsem připraven?“</a></li>
         <li><a href="#zaklady">Co je hypotéka</a></li>
         <li><a href="#kroky">Krok za krokem</a></li>
+        <li><a href="#nakup">Nákup nemovitosti</a></li>
         <li><a href="#podminky">Podmínky ČNB</a></li>
         <li><a href="#uroky">Úroky a fixace</a></li>
         <li><a href="#banka">Bankovní realita</a></li>
@@ -158,6 +159,24 @@
           <li class="timeline__item"><div class="timeline__num">9</div><div class="timeline__title">Zápis zástavního práva</div><p>Vklad lze povolit nejdříve po <span class="fact" data-fact="katastr_ochranna_lhuta"></span> od plomby. Skutečná doba bývá delší a mění se. Banka často uvolní peníze už na základě plomby.</p></li>
           <li class="timeline__item"><div class="timeline__num">10</div><div class="timeline__title">Splácení začíná</div><p>Pravidelná anuitní splátka. Nastavte si připomínku 4–5 měsíců před koncem fixace.</p></li>
         </ol>
+      </div>
+    </section>
+
+    <!-- Nákup nemovitosti: smlouvy, úschova, katastr (P2) -->
+    <section class="section" id="nakup">
+      <div class="container">
+        <h2>Nákup nemovitosti: smlouvy, úschova, katastr</h2>
+        <p class="section__lead">Kolem hypotéky běží druhý proces — samotná koupě. Tady je, jak jdou za sebou smlouvy, peníze v úschově a zápis v <button class="term" data-term="katastr">katastru</button>.</p>
+
+        <h3 style="margin-top:var(--sp-6)">Jak jde koupě za sebou</h3>
+        <ol class="timeline" id="purchase-timeline"></ol>
+
+        <h3 style="margin-top:var(--sp-12)">Klíčové dokumenty a pojmy</h3>
+        <div class="grid grid--2" id="purchase-docs"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Checklist před koupí</h3>
+        <p class="text-muted">Odškrtnuté položky se pamatují jen ve vašem prohlížeči. Projděte si právní stav nemovitosti i podmínky financování.</p>
+        <div id="purchase-checklist"></div>
       </div>
     </section>
 
@@ -419,6 +438,7 @@
   <script src="js/equity.js"></script>
   <script src="js/repayment.js"></script>
   <script src="js/bank-reality.js"></script>
+  <script src="js/purchase.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/tax-calculator.js"></script>
   <script src="js/early-repayment.js"></script>
