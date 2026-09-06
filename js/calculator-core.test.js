@@ -116,20 +116,35 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("příjmový šok: zbytek klesne", inc[0].remaining < (70000 - 25000 - 3000 - 20000));
 })();
 
-/* 13a) Režim B — dostupná cena nemovitosti. */
+/* 13a) Režim B — dostupná cena nemovitosti (vlastní zdroje kryjí akontaci i náklady). */
 (function () {
   // Vysoký příjem, málo úspor → omezují vlastní zdroje.
-  var r = C.maxAffordableProperty({ netIncome: 90000, obligations: 0, savings: 300000, reserve: 100000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
+  var r = C.maxAffordableProperty({ netIncome: 90000, obligations: 0, savings: 300000, reserve: 100000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8, txRate: 0.03 });
   ok("Režim B: maxProperty > 0", r.maxProperty > 0, r.maxProperty.toFixed(0));
   ok("Režim B: ownForPurchase = savings−reserve", approx(r.ownForPurchase, 200000, 0.01), r.ownForPurchase);
-  // ownForPurchase 200k, LTV 80% → pByLtv = 200k/0.2 = 1,000,000
-  ok("Režim B: pByLtv = own/(1−LTV)", approx(r.pByLtv, 1000000, 1), r.pByLtv.toFixed(0));
+  // ownForPurchase 200k, LTV 80% (akontace 20 %) + náklady 3 % → priceByLtv = 200k/0.23 ≈ 869 565
+  ok("Režim B: priceByLtv = own/(akontace%+náklady%)", approx(r.priceByLtv, 869565, 2), r.priceByLtv.toFixed(0));
   ok("Režim B: nízké úspory → bottleneck vlastní zdroje", r.bottleneck === "vlastni_zdroje", r.bottleneck);
+  // Konzistence: vlastní zdroje pokryjí akontaci i náklady (žádný falešný nedostatek).
+  ok("Režim B: neededOwn ≤ ownForPurchase", r.neededOwn <= r.ownForPurchase + 1, r.neededOwn.toFixed(0) + " vs " + r.ownForPurchase.toFixed(0));
+  ok("Režim B: rezerva po koupi ≥ zadaná rezerva", r.reserveAfter >= 100000 - 1, r.reserveAfter.toFixed(0));
 
-  // Nízký příjem, dost úspor → omezuje příjem.
+  // Nízký příjem, dost úspor → omezuje příjem; loan = maxProperty × LTV.
   var r2 = C.maxAffordableProperty({ netIncome: 35000, obligations: 5000, savings: 3000000, reserve: 200000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
   ok("Režim B: vysoké úspory → bottleneck příjem", r2.bottleneck === "prijem", r2.bottleneck);
-  ok("Režim B: loan = maxProperty − own", approx(r2.loan, r2.maxProperty - r2.ownForPurchase, 1));
+  ok("Režim B: loan = maxProperty × LTV", approx(r2.loan, r2.maxProperty * 0.8, 1), r2.loan.toFixed(0));
+  ok("Režim B: příjmově omezený → přebývají vlastní zdroje", r2.neededOwn <= r2.ownForPurchase + 1, r2.neededOwn.toFixed(0) + " vs " + r2.ownForPurchase.toFixed(0));
+})();
+
+/* 13a2) Regrese: vysoký příjem NESMÍ vytvořit falešný nedostatek vlastních zdrojů. */
+(function () {
+  // Ověříme, že s rostoucím příjmem nikdy nevznikne záporná rezerva ani neededOwn > ownForPurchase.
+  var savings = 900000, reserve = 200000;
+  [40000, 60000, 90000, 150000, 300000].forEach(function (inc) {
+    var r = C.maxAffordableProperty({ netIncome: inc, obligations: 0, savings: savings, reserve: reserve, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
+    ok("Regrese příjem " + inc + ": neededOwn ≤ ownForPurchase", r.neededOwn <= r.ownForPurchase + 1, r.neededOwn.toFixed(0) + " vs " + r.ownForPurchase.toFixed(0));
+    ok("Regrese příjem " + inc + ": rezerva po koupi ≥ zadaná rezerva", r.reserveAfter >= reserve - 1, r.reserveAfter.toFixed(0));
+  });
 })();
 
 /* 13b) Bottleneck engine. */

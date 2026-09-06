@@ -201,25 +201,37 @@
     var dstiMax = params.dstiMax || 40;
     var dtiMax = params.dtiMax || 8;
 
+    var txRate = params.txRate != null ? params.txRate : 0.03; // transakční náklady jako podíl ceny
+
+    // Vlastní zdroje na nákup (rezerva zůstává stranou) musí pokrýt akontaci I transakční náklady.
     var ownForPurchase = Math.max(0, savings - reserve);
+    var downFrac = Math.max(0, 1 - ltvMax / 100); // podíl akontace z ceny
     var maxLoanByIncome = calculateMaxLoan(netIncome, obligations, rate, termMonths, { dsti: dstiMax, dti: dtiMax }).maxLoan;
 
-    // Omezení výší úvěru vůči LTV: cena ≤ vlastní_na_nákup / (1 − LTVmax).
-    var pByLtv = ltvMax < 100 ? ownForPurchase / (1 - ltvMax / 100) : Infinity;
-    // Omezení příjmem: cena ≤ max_úvěr + vlastní_na_nákup.
-    var pByIncome = maxLoanByIncome + ownForPurchase;
+    // Omezení vlastními zdroji: cena ≤ vlastní_na_nákup / (akontace% + náklady%).
+    var priceByLtv = (downFrac + txRate) > 0 ? ownForPurchase / (downFrac + txRate) : Infinity;
+    // Omezení příjmem: při maximálním LTV odpovídá úvěru, který příjem unese.
+    var priceByIncome = ltvMax > 0 ? maxLoanByIncome / (ltvMax / 100) : Infinity;
 
-    var maxProperty = Math.max(0, Math.min(pByLtv, pByIncome));
-    var loan = Math.max(0, maxProperty - ownForPurchase);
+    var maxProperty = Math.max(0, Math.min(priceByLtv, priceByIncome));
+    var loan = maxProperty * (ltvMax / 100);
+    var downPayment = maxProperty * downFrac;
+    var txCosts = maxProperty * txRate;
+    var neededOwn = downPayment + txCosts;              // co musí vlastní zdroje pokrýt
+    var reserveAfter = savings - downPayment - txCosts; // rezerva po koupi (≥ zadaná rezerva)
 
     return {
       maxProperty: maxProperty,
       loan: loan,
+      downPayment: downPayment,
+      txCosts: txCosts,
+      neededOwn: neededOwn,
+      reserveAfter: reserveAfter,
       ownForPurchase: ownForPurchase,
       maxLoanByIncome: maxLoanByIncome,
-      pByLtv: pByLtv,
-      pByIncome: pByIncome,
-      bottleneck: pByIncome <= pByLtv ? "prijem" : "vlastni_zdroje"
+      priceByLtv: priceByLtv,
+      priceByIncome: priceByIncome,
+      bottleneck: priceByIncome <= priceByLtv ? "prijem" : "vlastni_zdroje"
     };
   }
 

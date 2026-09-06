@@ -132,13 +132,29 @@
     }
     root.querySelector("[data-aff-tiers]").innerHTML = tilesHtml;
 
-    // Bottleneck (na rozumné úrovni)
+    // Bottleneck pro Režim B — hlavní omezení + zdraví rezervy (bez falešného „LTV u hranice“,
+    // protože model záměrně počítá s maximem LTV).
     var pay = payment(rozumny);
-    var ltv = rozumny.maxProperty > 0 ? (rozumny.loan / rozumny.maxProperty) * 100 : 0;
-    var txCosts = rozumny.maxProperty * TX_COST_RATE;
-    var reserveAfter = state.rezerva - txCosts;
-    var dsti = state.prijem ? ((pay + state.zavazky) / state.prijem) * 100 : null;
-    var bn = C.detectBottleneck({ ltv: ltv, ltvMax: maxLtv(), dsti: dsti, dstiThr: dstiThr(), reserveAfter: reserveAfter, monthlyPayment: pay });
+    var reserveAfter = rozumny.reserveAfter;               // ≥ zadaná rezerva
+    var neededOwn = rozumny.neededOwn;                     // akontace + náklady
+    var ownAvail = rozumny.ownForPurchase;                 // úspory − rezerva
+    var diff = ownAvail - neededOwn;                       // ≥ 0 (model je konzistentní)
+    var reserveTarget = pay * 3;
+
+    var bn;
+    if (rozumny.maxProperty < 1) {
+      bn = { level: "red", key: "vlastni_zdroje", title: "Nedostatek vlastních prostředků",
+             text: "Se zadanými úsporami a požadovanou rezervou nevychází dosažitelná cena. Zvyšte úspory nebo snižte rezervu, kterou si chcete ponechat." };
+    } else if (reserveAfter < reserveTarget) {
+      bn = { level: "amber", key: "rezerva", title: "Nízká rezerva po koupi",
+             text: "Po koupi by vám zůstalo jen ~" + fmtCZK(reserveAfter) + ". Zdravá rezerva bývá 3–6 měsíčních splátek (" + fmtCZK(pay * 3) + "–" + fmtCZK(pay * 6) + "). Zvažte levnější nemovitost." };
+    } else if (rozumny.bottleneck === "vlastni_zdroje") {
+      bn = { level: "tip", key: "vlastni_zdroje", title: "Hlavní omezení: vlastní zdroje",
+             text: "Vaši dosažitelnou cenu určují vlastní zdroje (a závazný limit LTV), ne příjem. Víc vlastních peněz = vyšší dosažitelná cena." };
+    } else {
+      bn = { level: "tip", key: "prijem", title: "Hlavní omezení: příjem",
+             text: "Vaši dosažitelnou cenu určuje příjem (kolik unesou splátky). Delší doba splatnosti nebo nižší stávající závazky by cenu zvýšily." };
+    }
     var bnClass = bn.level === "red" ? "note--critical" : (bn.level === "amber" ? "note--warn" : "note--tip");
     var bnIcon = bn.level === "red" ? "🔴" : (bn.level === "amber" ? "🟠" : "🟢");
     var bnLink = bn.key === "vlastni_zdroje" ? '<p style="margin-top:var(--sp-2)"><a href="#vlastni-zdroje">Co s nedostatkem vlastních zdrojů? →</a></p>' : "";
@@ -147,19 +163,16 @@
       '<div class="note ' + bnClass + '"><div class="note__title">' + bnIcon + ' ' + bn.title + '</div><p>' + bn.text + '</p>' + bnLink + '</div>';
 
     // Personalizovaná karta
-    var neededOwn = rozumny.maxProperty * (1 - maxLtv() / 100);
-    var ownAvail = Math.max(0, state.uspory - state.rezerva);
-    var diff = ownAvail - neededOwn;
     var stressPay = C.calculateMonthlyPayment(rozumny.loan, state.sazba + STRESS_PB, state.doba * 12);
     var card =
       '<h3 style="margin-top:var(--sp-8)">Vaše hypoteční karta</h3>' +
       '<div class="hcard">' +
         cardRow("Rozumný rozpočet na nemovitost", fmtCZK(rozumny.maxProperty), true) +
-        cardRow("Potřebné vlastní zdroje (akontace)", fmtCZK(neededOwn)) +
+        cardRow("Potřebné vlastní zdroje (akontace + náklady)", fmtCZK(neededOwn)) +
         cardRow("Vaše vlastní zdroje na koupi", fmtCZK(ownAvail)) +
         cardRow(diff >= 0 ? "Přebývá" : "Chybí", fmtCZK(Math.abs(diff)), false, diff < 0 ? "neg" : "pos") +
         cardRow("Hlavní omezení", bnTitleShort(bn)) +
-        cardRow("Rezerva po koupi", fmtCZK(reserveAfter), false, reserveAfter < 0 ? "neg" : "") +
+        cardRow("Rezerva po koupi", fmtCZK(reserveAfter), false, reserveAfter < reserveTarget ? "warn" : "pos") +
         cardRow("Splátka (rozumný rozpočet)", fmtCZK(pay)) +
         cardRow("Splátka při +2 p. b. (" + String(state.sazba + STRESS_PB).replace(".", ",") + " %)", fmtCZK(stressPay), false, "warn") +
       '</div>' +
@@ -172,8 +185,8 @@
     // „Jak jsme k tomu došli"
     root.querySelector("[data-aff-how]").innerHTML =
       '<p><strong>Vstupy:</strong> příjem ' + fmtCZK(state.prijem) + ', závazky ' + fmtCZK(state.zavazky) + ', úspory ' + fmtCZK(state.uspory) + ', rezerva ' + fmtCZK(state.rezerva) + ', sazba ' + String(state.sazba).replace(".", ",") + ' %, doba ' + state.doba + ' let, LTV limit ' + maxLtv() + ' %.</p>' +
-      '<p><strong>Postup:</strong> Vlastní zdroje na koupi = úspory − rezerva = ' + fmtCZK(ownAvail) + '. Maximální úvěr podle DSTI ' + dstiThr() + ' % a DTI ' + dtiThr() + '× = ' + fmtCZK(rozumny.maxLoanByIncome) + '. Cena je omezena buď příjmem (úvěr + vlastní zdroje), nebo LTV (vlastní zdroje ÷ (1 − LTV)). Bereme nižší z obou.</p>' +
-      '<p><strong>Předpoklady:</strong> <button class="term" data-term="anuita">anuitní splácení</button>, měsíční úrok = roční ÷ 12, transakční náklady ~3 % ceny. <strong>Nebere v úvahu:</strong> konkrétní metodiku banky, bonusové/nepravidelné příjmy, budoucí změny sazeb, individuální posouzení <button class="term" data-term="bonita">bonity</button>.</p>';
+      '<p><strong>Postup:</strong> Vlastní zdroje na koupi = úspory − rezerva = ' + fmtCZK(ownAvail) + ' (rezerva ' + fmtCZK(state.rezerva) + ' zůstává stranou). Tyto zdroje musí pokrýt akontaci i transakční náklady (~3 % ceny), proto cena podle vlastních zdrojů = zdroje ÷ (podíl akontace + 3 %). Cena podle příjmu = maximální úvěr (dle DSTI ' + dstiThr() + ' % a DTI ' + dtiThr() + '×, tj. ' + fmtCZK(rozumny.maxLoanByIncome) + ') ÷ podíl LTV. Bereme nižší z obou = ' + fmtCZK(rozumny.maxProperty) + '.</p>' +
+      '<p><strong>Předpoklady:</strong> <button class="term" data-term="anuita">anuitní splácení</button>, měsíční úrok = roční ÷ 12, transakční náklady ~3 % ceny, počítá se s maximálním čerpáním LTV. <strong>Nebere v úvahu:</strong> konkrétní metodiku banky, bonusové/nepravidelné příjmy, budoucí změny sazeb, individuální posouzení <button class="term" data-term="bonita">bonity</button>.</p>';
 
     updateUrl();
     if (window.HypoTerms) window.HypoTerms.enhance(root);
