@@ -187,6 +187,16 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("extraPayment: bez extra nic neušetří", none.monthsSaved === 0 && approx(none.interestSaved, 0, 0.5));
 })();
 
+/* 13h) Nájem vs. koupě. */
+(function () {
+  var base = { monthlyRent: 18000, rentGrowthPct: 3, price: 5000000, loan: 4000000, ratePct: 5, termMonths: 360, ownershipMonthly: 3000, appreciationPct: 2, horizonYears: 10 };
+  var r = C.rentVsBuy(base);
+  ok("rentVsBuy: rentTotal > 0", r.rentTotal > 0, r.rentTotal.toFixed(0));
+  ok("rentVsBuy: vrací cheaper", r.cheaper === "koupe" || r.cheaper === "najem", r.cheaper);
+  var hi = C.rentVsBuy(Object.assign({}, base, { appreciationPct: 8 }));
+  ok("rentVsBuy: vyšší růst hodnoty → nižší netOwning", hi.netOwning < r.netOwning, hi.netOwning.toFixed(0) + " < " + r.netOwning.toFixed(0));
+})();
+
 /* 13) URL state — round trip. */
 (function () {
   var params = { cena: 5000000, vlastni: 1200000, uver: 3800000, sazba: 4.5, doba: 30, typ: "vlastni", mlady: true };

@@ -340,6 +340,39 @@
     };
   }
 
+  /**
+   * Nájem vs. koupě — zjednodušené porovnání za zvolený horizont.
+   * Model NEtvrdí, že koupě je vždy lepší; nezohledňuje investování ušetřených
+   * peněz, transakční náklady ani daně. Slouží k porovnání scénářů.
+   * params: { monthlyRent, rentGrowthPct, price, loan, ratePct, termMonths,
+   *           ownershipMonthly, appreciationPct, horizonYears }
+   */
+  function rentVsBuy(params) {
+    var hm = Math.max(1, Math.round((params.horizonYears || 10) * 12));
+    var rent = params.monthlyRent || 0, rentTotal = 0;
+    for (var m = 1; m <= hm; m++) { rentTotal += rent; if (m % 12 === 0) rent *= (1 + (params.rentGrowthPct || 0) / 100); }
+
+    var pay = calculateMonthlyPayment(params.loan || 0, params.ratePct || 0, params.termMonths || 360);
+    var ownPaymentsTotal = pay * Math.min(hm, params.termMonths || 360);
+    var ownCostsTotal = (params.ownershipMonthly || 0) * hm;
+    var downPayment = Math.max(0, (params.price || 0) - (params.loan || 0));
+
+    var sched = generateAmortizationSchedule(params.loan || 0, params.ratePct || 0, params.termMonths || 360, {});
+    var remaining = hm >= sched.rows.length ? 0 : (sched.rows[hm - 1] ? sched.rows[hm - 1].balance : 0);
+    var propValueEnd = (params.price || 0) * Math.pow(1 + (params.appreciationPct || 0) / 100, params.horizonYears || 10);
+    var equityEnd = propValueEnd - remaining;
+
+    var netOwning = downPayment + ownPaymentsTotal + ownCostsTotal - equityEnd;
+    var netRenting = rentTotal;
+
+    return {
+      rentTotal: rentTotal, ownPaymentsTotal: ownPaymentsTotal, ownCostsTotal: ownCostsTotal,
+      downPayment: downPayment, remaining: remaining, propValueEnd: propValueEnd, equityEnd: equityEnd,
+      netOwning: netOwning, netRenting: netRenting,
+      cheaper: netOwning < netRenting ? "koupe" : "najem", diff: Math.abs(netOwning - netRenting)
+    };
+  }
+
   /* --- URL state (sdílení scénáře odkazem) --- */
   var STATE_KEYS = ["cena", "odhad", "vlastni", "uver", "sazba", "doba", "typ", "mlady",
                     "fixace", "sazbaPo", "extraMesic", "prijem", "vydaje", "zavazky"];
@@ -386,6 +419,7 @@
     consolidation: consolidation,
     compareTerms: compareTerms,
     extraPaymentImpact: extraPaymentImpact,
+    rentVsBuy: rentVsBuy,
     stressTestRate: stressTestRate,
     stressTestIncome: stressTestIncome,
     serializeState: serializeState,

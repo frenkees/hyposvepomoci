@@ -63,6 +63,7 @@
         <li><a href="#pozor">Na co si dát pozor</a></li>
         <li><a href="#vlastni-zdroje">Nemám dost vlastních zdrojů</a></li>
         <li><a href="#splaceni">Splácení a refinancování</a></li>
+        <li><a href="#naklady">Náklady · nájem vs. koupě</a></li>
         <li><a href="#predcasne">Předčasné splacení</a></li>
         <li><a href="#dane">Daňové odpočty</a></li>
         <li><a href="#kalkulacka">Kalkulačka</a></li>
@@ -123,8 +124,16 @@
         <div class="grid grid--2">
           <div class="card">
             <h3>Čím se liší od jiných úvěrů</h3>
-            <p>Oproti spotřebitelskému úvěru je levnější (nižší úrok), ale je zajištěná nemovitostí a je na delší dobu. Od úvěru ze stavebního spoření se liší podmínkami i účelovostí.</p>
-            <p class="placeholder">[Doplnit finální edukační text — srovnávací tabulka spotřebitelský úvěr / stavební spoření / hypotéka.]</p>
+            <div class="amort"><table class="amort-table" style="text-align:left">
+              <thead><tr><th style="text-align:left">&nbsp;</th><th style="text-align:left">Hypotéka</th><th style="text-align:left">Spotřebitelský úvěr</th><th style="text-align:left">Úvěr ze stav. spoření</th></tr></thead>
+              <tbody>
+                <tr><td style="text-align:left">Zajištění</td><td style="text-align:left">nemovitostí</td><td style="text-align:left">obvykle bez zajištění</td><td style="text-align:left">podle výše i bez zajištění</td></tr>
+                <tr><td style="text-align:left">Úrok</td><td style="text-align:left">nižší</td><td style="text-align:left">vyšší</td><td style="text-align:left">pevný, daný smlouvou</td></tr>
+                <tr><td style="text-align:left">Doba</td><td style="text-align:left">až 30–40 let</td><td style="text-align:left">kratší</td><td style="text-align:left">střední</td></tr>
+                <tr><td style="text-align:left">Účel</td><td style="text-align:left">bydlení (účelová)</td><td style="text-align:left">libovolný</td><td style="text-align:left">bytové potřeby</td></tr>
+              </tbody>
+            </table></div>
+            <p class="text-muted" style="font-size:.85rem">Orientační srovnání. Konkrétní podmínky se liší podle produktu a banky.</p>
           </div>
           <div class="card">
             <h3>Timeline peněz — kdy je vlastně potřebujete?</h3>
@@ -152,9 +161,9 @@
           <li class="timeline__item"><div class="timeline__num">2</div><div class="timeline__title">Naspořte vlastní zdroje</div><p>Podle závazného LTV potřebujete zpravidla alespoň <span class="fact" data-fact="ltv_owner_standard" data-part="means" data-badge="false"></span></p></li>
           <li class="timeline__item"><div class="timeline__num">3</div><div class="timeline__title">Vybírejte nemovitost</div><p>Ideálně s předběžným posouzením (pre-approval) od banky.</p></li>
           <li class="timeline__item"><div class="timeline__num">4</div><div class="timeline__title">Porovnejte více než jednu nabídku</div><p>U většího úvěru se vyplatí získat několik konkurenčních nabídek — ne dogma „vždy 3–5 bank“, ale nespoléhat na jednu.</p></li>
-          <li class="timeline__item"><div class="timeline__num">5</div><div class="timeline__title">Podejte žádost</div><p>Připravte doklady (jiné pro zaměstnance, jiné pro OSVČ). <span class="placeholder">[Checklist dokumentů.]</span></p></li>
+          <li class="timeline__item"><div class="timeline__num">5</div><div class="timeline__title">Podejte žádost</div><p>Připravte doklady — jiné pro zaměstnance (potvrzení o příjmu, výpisy), jiné pro OSVČ (daňová přiznání). Detaily v sekci <a href="#banka">Bankovní realita</a>.</p></li>
           <li class="timeline__item"><div class="timeline__num">6</div><div class="timeline__title">Odhad nemovitosti</div><p>U bytů ve městech banky často dělají online (desktopový) odhad zdarma. <strong>Nespěchejte s vlastním posudkem</strong> — banka ho nemusí akceptovat.</p></li>
-          <li class="timeline__item"><div class="timeline__num">7</div><div class="timeline__title">Schválení a podpis smlouvy</div><p><span class="placeholder">[Na co si dát pozor před podpisem — propojit s checklistem.]</span></p></li>
+          <li class="timeline__item"><div class="timeline__num">7</div><div class="timeline__title">Schválení a podpis smlouvy</div><p>Před podpisem si projděte <a href="#nastroje">checklist před podpisem</a> — sazba, RPSN, podmínky sazby, pojištění, sankce, mimořádné splátky.</p></li>
           <li class="timeline__item"><div class="timeline__num">8</div><div class="timeline__title">Čerpání úvěru</div><p>Jak a kdy banka uvolní peníze.</p></li>
           <li class="timeline__item"><div class="timeline__num">9</div><div class="timeline__title">Zápis zástavního práva</div><p>Vklad lze povolit nejdříve po <span class="fact" data-fact="katastr_ochranna_lhuta"></span> od plomby. Skutečná doba bývá delší a mění se. Banka často uvolní peníze už na základě plomby.</p></li>
           <li class="timeline__item"><div class="timeline__num">10</div><div class="timeline__title">Splácení začíná</div><p>Pravidelná anuitní splátka. Nastavte si připomínku 4–5 měsíců před koncem fixace.</p></li>
@@ -254,7 +263,7 @@
           <div class="card"><h3>Skryté poplatky</h3><p>Odhad, vedení účtu, zpracování, pojištění. Porovnávejte podle <button class="term" data-term="rpsn">RPSN</button>, ne jen podle <button class="term" data-term="urok">úroku</button>.</p></div>
           <div class="card"><h3>Pojištění</h3><p>Pojištění nemovitosti bývá povinné (vinkulované ve prospěch banky). Životní pojištění zpravidla povinné není — často je jen podmínkou zvýhodněné sazby a bankovní bývá dražší než externí.</p></div>
           <div class="card"><h3>Časté chyby</h3><p>Neporovnání nabídek, sledování jen úroku, půjčení si maxima bez rezervy, opomenutí životních změn.</p></div>
-          <div class="card"><h3>Checklist „Co si pohlídat ve smlouvě“</h3><p class="placeholder">[Interaktivní checklist — Fáze 3.]</p></div>
+          <div class="card"><h3>Checklist „Co si pohlídat ve smlouvě“</h3><p>Interaktivní checklist s odškrtáváním najdete v sekci <a href="#nastroje">Praktické nástroje</a> a před koupí i v sekci <a href="#nakup">Nákup nemovitosti</a>.</p></div>
         </div>
       </div>
     </section>
@@ -264,7 +273,7 @@
       <div class="container">
         <h2>Předčasné splacení</h2>
         <p class="section__lead">Kolik zaplatíte, závisí na situaci — neplatí univerzální „1 % / 50 000 Kč“. Obecný strop je <span class="fact" data-fact="obecny_strop_procenta" data-part="value" data-badge="false"></span>, nejvýše <span class="fact" data-fact="obecny_strop_maximum" data-part="value"></span>. Existuje řada případů bez náhrady.</p>
-        <div class="card" id="early-repayment-tree"><p class="placeholder">[Interaktivní rozhodovací strom předčasného splacení — Fáze 3.]</p></div>
+        <div class="card" id="early-repayment-tree"><p class="placeholder">Načítám rozhodovací strom…</p></div>
       </div>
     </section>
 
@@ -285,7 +294,7 @@
       <div class="container">
         <h2>Daňové odpočty</h2>
         <p class="section__lead">Úroky lze odečíst od <strong>základu daně</strong> — to není totéž co sleva na dani ani vrácení celé částky. Limit závisí na datu obstarání bytové potřeby: <span class="fact" data-fact="odpocet_limit_do_2020" data-part="value" data-badge="false"></span> do konce 2020, <span class="fact" data-fact="odpocet_limit_od_2021" data-part="value"></span> od roku 2021.</p>
-        <div class="card" id="tax-calculator"><p class="placeholder">[Interaktivní daňový kalkulátor — Fáze 3.]</p></div>
+        <div class="card" id="tax-calculator"><p class="placeholder">Načítám daňový kalkulátor…</p></div>
       </div>
     </section>
 
@@ -293,7 +302,7 @@
     <section class="section" id="stat">
       <div class="container">
         <h2>Státní podpora bydlení — aktuálně dostupné programy</h2>
-        <div class="grid grid--2" id="sfpi-programs"><p class="placeholder">[Programy SFPI s dynamickým stavem — renderuje se z dat.]</p></div>
+        <div class="grid grid--2" id="sfpi-programs"><p class="placeholder">Načítám programy…</p></div>
       </div>
     </section>
 
@@ -355,20 +364,33 @@
       </div>
     </section>
 
+    <!-- Skutečné náklady bydlení + nájem vs koupě (P2) -->
+    <section class="section" id="naklady">
+      <div class="container">
+        <h2>Skutečné náklady bydlení</h2>
+        <p class="section__lead">Splátka není všechno. K reálným nákladům bydlení patří i energie, fond oprav, pojištění a údržba.</p>
+        <div class="card" id="tool-naklady"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nájem vs. koupě</h3>
+        <p class="text-muted">Zjednodušené porovnání za zvolený horizont. Neříká, že koupě je vždy lepší — záleží na předpokladech.</p>
+        <div class="card" id="tool-najem"></div>
+      </div>
+    </section>
+
     <!-- Nástroje (Fáze 3) -->
     <section class="section" id="nastroje">
       <div class="container">
         <h2>Praktické nástroje</h2>
         <div class="grid grid--2">
-          <div class="card" id="offer-translator"><h3>Překladač bankovní nabídky</h3><p class="placeholder">[Fáze 3.]</p></div>
-          <div class="card" id="red-flags"><h3>Red flags v nabídce</h3><p class="placeholder">[Fáze 3.]</p></div>
-          <div class="card" id="checklist"><h3>Checklist před podpisem</h3><p class="placeholder">[Fáze 3 — základní verze zdarma.]</p></div>
-          <div class="card" id="banker-questions"><h3>Otázky, které položit bankéři</h3><p class="placeholder">[Fáze 3 — s kopírováním do telefonu.]</p></div>
+          <div class="card" id="offer-translator"><h3>Překladač bankovní nabídky</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="red-flags"><h3>Red flags v nabídce</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="checklist"><h3>Checklist před podpisem</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="banker-questions"><h3>Otázky, které položit bankéři</h3><p class="placeholder">Načítám…</p></div>
         </div>
         <h3 style="margin-top:var(--sp-8)">Co se stane, když…</h3>
-        <div class="card" id="faq"><p class="placeholder">[Interaktivní FAQ — Fáze 3.]</p></div>
+        <div class="card" id="faq"><p class="placeholder">Načítám…</p></div>
         <h3 style="margin-top:var(--sp-8)">Příklad: Jan a Petra</h3>
-        <div class="card" id="family-example"><p class="placeholder">[Fiktivní rodina provedená celým procesem — Fáze 3.]</p></div>
+        <div class="card" id="family-example"><p class="placeholder">Načítám…</p></div>
       </div>
     </section>
 
@@ -439,6 +461,7 @@
   <script src="js/repayment.js"></script>
   <script src="js/bank-reality.js"></script>
   <script src="js/purchase.js"></script>
+  <script src="js/costs.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/tax-calculator.js"></script>
   <script src="js/early-repayment.js"></script>
