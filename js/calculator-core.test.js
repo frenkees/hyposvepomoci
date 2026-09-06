@@ -129,11 +129,40 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("Režim B: neededOwn ≤ ownForPurchase", r.neededOwn <= r.ownForPurchase + 1, r.neededOwn.toFixed(0) + " vs " + r.ownForPurchase.toFixed(0));
   ok("Režim B: rezerva po koupi ≥ zadaná rezerva", r.reserveAfter >= 100000 - 1, r.reserveAfter.toFixed(0));
 
-  // Nízký příjem, dost úspor → omezuje příjem; loan = maxProperty × LTV.
+  // Nízký příjem, dost úspor → omezuje příjem; půjčuje se jen chybějící část (borrow-shortfall).
   var r2 = C.maxAffordableProperty({ netIncome: 35000, obligations: 5000, savings: 3000000, reserve: 200000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8 });
   ok("Režim B: vysoké úspory → bottleneck příjem", r2.bottleneck === "prijem", r2.bottleneck);
-  ok("Režim B: loan = maxProperty × LTV", approx(r2.loan, r2.maxProperty * 0.8, 1), r2.loan.toFixed(0));
+  // Borrow-shortfall: při příjmovém omezení se půjčí přesně tolik, kolik unese příjem.
+  ok("Režim B: loan = maxLoanByIncome (příjmově omezeno)", approx(r2.loan, r2.maxLoanByIncome, 1), r2.loan.toFixed(0) + " vs " + r2.maxLoanByIncome.toFixed(0));
+  ok("Režim B: LTV pod hranicí (dost úspor)", r2.loan / r2.maxProperty < 0.8, (100 * r2.loan / r2.maxProperty).toFixed(1) + " %");
   ok("Režim B: příjmově omezený → přebývají vlastní zdroje", r2.neededOwn <= r2.ownForPurchase + 1, r2.neededOwn.toFixed(0) + " vs " + r2.ownForPurchase.toFixed(0));
+})();
+
+/* 13a3) Režim B — další zdroje financování (dar, půjčka od rodiny, spotřebitelský úvěr, druhá zástava). */
+(function () {
+  var base = { netIncome: 60000, obligations: 0, savings: 300000, reserve: 100000, termMonths: 360, rate: 5, ltvMax: 80, dstiMax: 40, dtiMax: 8, txRate: 0.03 };
+  var r0 = C.maxAffordableProperty(base);
+
+  // Dar (hotovost bez splátky) → víc vlastních zdrojů, žádná zátěž DSTI, dražší nemovitost.
+  var rGift = C.maxAffordableProperty(Object.assign({}, base, { extraCash: 500000 }));
+  ok("Režim B: dar zvýší vlastní zdroje", approx(rGift.ownFundsTotal, 800000, 0.01), rGift.ownFundsTotal.toFixed(0));
+  ok("Režim B: dar → dražší dostupná nemovitost", rGift.maxProperty > r0.maxProperty, rGift.maxProperty.toFixed(0) + " > " + r0.maxProperty.toFixed(0));
+  ok("Režim B: dar nezvyšuje závazky", approx(rGift.obligationsTotal, 0, 0.01), rGift.obligationsTotal.toFixed(0));
+
+  // Půjčka od rodiny: hotovost navíc + měsíční splátka → zvyšuje závazky (DSTI), snižuje kapacitu.
+  var rLoan = C.maxAffordableProperty(Object.assign({}, base, { extraCash: 500000, extraDebtService: 6000 }));
+  ok("Režim B: splátka dalšího úvěru zvýší závazky", approx(rLoan.obligationsTotal, 6000, 0.01), rLoan.obligationsTotal.toFixed(0));
+  ok("Režim B: splátka úvěru sníží úvěrovou kapacitu", rLoan.maxLoanByIncome < rGift.maxLoanByIncome, rLoan.maxLoanByIncome.toFixed(0) + " < " + rGift.maxLoanByIncome.toFixed(0));
+
+  // Druhá nemovitost do zástavy → rozšíří základnu LTV, uvolní omezení vlastními zdroji.
+  var rColl = C.maxAffordableProperty(Object.assign({}, base, { collateralValue: 2000000 }));
+  ok("Režim B: druhá zástava zvýší priceByLtv", rColl.priceByLtv > r0.priceByLtv, rColl.priceByLtv.toFixed(0) + " > " + r0.priceByLtv.toFixed(0));
+
+  // Invariant zůstává i s dalšími zdroji: rezerva po koupi ≥ zadaná rezerva.
+  [rGift, rLoan, rColl].forEach(function (r, i) {
+    ok("Režim B (zdroj " + i + "): rezerva po koupi ≥ zadaná", r.reserveAfter >= base.reserve - 1, r.reserveAfter.toFixed(0));
+    ok("Režim B (zdroj " + i + "): neededOwn ≤ vlastní zdroje na nákup", r.neededOwn <= r.ownForPurchase + 1, r.neededOwn.toFixed(0) + " vs " + r.ownForPurchase.toFixed(0));
+  });
 })();
 
 /* 13a2) Regrese: vysoký příjem NESMÍ vytvořit falešný nedostatek vlastních zdrojů. */

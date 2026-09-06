@@ -184,10 +184,17 @@
   }
 
   /**
-   * (Režim B) Jak drahou nemovitost si můžu dovolit — z příjmu, úspor a rezervy.
-   * Vrací maximální cenu nemovitosti při daném limitu LTV a prahu DSTI/DTI.
-   * params: { netIncome, obligations, savings, reserve, termMonths, rate, ltvMax, dstiMax, dtiMax }
-   * Vrací: { maxProperty, loan, ownForPurchase, maxLoanByIncome, pByLtv, pByIncome, bottleneck }
+   * (Režim B) Jak drahou nemovitost si můžu dovolit — z příjmu, vlastních zdrojů a rezervy.
+   * Model „borrow-shortfall": vlastní zdroje zaplatí co nejvíc, hypotéka dorovná zbytek
+   * (omezeno LTV zajištění a únosností splátky). Podporuje další zdroje financování:
+   *   - extraCash: hotovost navíc (dar, půjčka od rodiny, spotřebitelský úvěr) přičtená k úsporám
+   *   - extraDebtService: měsíční splátky těchto dalších úvěrů — snižují úvěrovou kapacitu (DSTI)
+   *   - collateralValue: druhá nemovitost do zástavy — rozšiřuje základnu pro LTV
+   * params: { netIncome, obligations, savings, reserve, termMonths, rate, ltvMax, dstiMax, dtiMax,
+   *           txRate, extraCash, extraDebtService, collateralValue }
+   * Vrací: { maxProperty, loan, downPayment, txCosts, neededOwn, reserveAfter, ownFundsTotal,
+   *          ownForPurchase, maxLoanByIncome, obligationsTotal, extraDebtService, collateralValue,
+   *          priceByLtv, priceByIncome, bottleneck }
    *   bottleneck: "vlastni_zdroje" | "prijem" — co omezuje víc.
    */
   function maxAffordableProperty(params) {
@@ -202,23 +209,33 @@
     var dtiMax = params.dtiMax || 8;
 
     var txRate = params.txRate != null ? params.txRate : 0.03; // transakční náklady jako podíl ceny
+    var extraCash = params.extraCash || 0;                 // dar + půjčka od rodiny + spotřebitelský úvěr
+    var extraDebtService = params.extraDebtService || 0;   // měsíční splátky těchto dalších úvěrů
+    var collateralValue = params.collateralValue || 0;     // druhá nemovitost do zástavy (hodnota)
 
-    // Vlastní zdroje na nákup (rezerva zůstává stranou) musí pokrýt akontaci I transakční náklady.
-    var ownForPurchase = Math.max(0, savings - reserve);
-    var downFrac = Math.max(0, 1 - ltvMax / 100); // podíl akontace z ceny
-    var maxLoanByIncome = calculateMaxLoan(netIncome, obligations, rate, termMonths, { dsti: dstiMax, dti: dtiMax }).maxLoan;
+    // Celkové vlastní zdroje = úspory + hotovost z dalších zdrojů. Rezerva zůstává stranou.
+    var ownFundsTotal = savings + extraCash;
+    var ownForPurchase = Math.max(0, ownFundsTotal - reserve);
+    var downFrac = Math.max(0, 1 - ltvMax / 100); // podíl akontace z ceny (kupované nemovitosti)
 
-    // Omezení vlastními zdroji: cena ≤ vlastní_na_nákup / (akontace% + náklady%).
-    var priceByLtv = (downFrac + txRate) > 0 ? ownForPurchase / (downFrac + txRate) : Infinity;
-    // Omezení příjmem: při maximálním LTV odpovídá úvěru, který příjem unese.
-    var priceByIncome = ltvMax > 0 ? maxLoanByIncome / (ltvMax / 100) : Infinity;
+    // Splátky dalších úvěrů zatěžují DSTI → snižují úvěrovou kapacitu z příjmu.
+    var obligationsTotal = obligations + extraDebtService;
+    var maxLoanByIncome = calculateMaxLoan(netIncome, obligationsTotal, rate, termMonths, { dsti: dstiMax, dti: dtiMax }).maxLoan;
+
+    // Omezení příjmem: celkové náklady (cena + transakce) pokryjí vlastní zdroje + max. úvěr.
+    var priceByIncome = (maxLoanByIncome + ownForPurchase) / (1 + txRate);
+    // Omezení LTV: úvěr ≤ ltvMax % ze základny zajištění (kupovaná nemovitost + druhá zástava).
+    // loan = cena*(1+tx) − vlastní ≤ ltvMax/100*(cena + collateral) → řešení pro cenu:
+    var priceByLtv = (downFrac + txRate) > 0
+      ? (ownForPurchase + (ltvMax / 100) * collateralValue) / (downFrac + txRate)
+      : Infinity;
 
     var maxProperty = Math.max(0, Math.min(priceByLtv, priceByIncome));
-    var loan = maxProperty * (ltvMax / 100);
-    var downPayment = maxProperty * downFrac;
     var txCosts = maxProperty * txRate;
+    var loan = Math.max(0, maxProperty * (1 + txRate) - ownForPurchase);
+    var downPayment = maxProperty - loan;               // část ceny hrazená z vlastních zdrojů
     var neededOwn = downPayment + txCosts;              // co musí vlastní zdroje pokrýt
-    var reserveAfter = savings - downPayment - txCosts; // rezerva po koupi (≥ zadaná rezerva)
+    var reserveAfter = ownFundsTotal - downPayment - txCosts; // rezerva po koupi (≥ zadaná rezerva)
 
     return {
       maxProperty: maxProperty,
@@ -227,8 +244,12 @@
       txCosts: txCosts,
       neededOwn: neededOwn,
       reserveAfter: reserveAfter,
+      ownFundsTotal: ownFundsTotal,
       ownForPurchase: ownForPurchase,
       maxLoanByIncome: maxLoanByIncome,
+      obligationsTotal: obligationsTotal,
+      extraDebtService: extraDebtService,
+      collateralValue: collateralValue,
       priceByLtv: priceByLtv,
       priceByIncome: priceByIncome,
       bottleneck: priceByIncome <= priceByLtv ? "prijem" : "vlastni_zdroje"
