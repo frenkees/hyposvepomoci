@@ -168,6 +168,25 @@ function approx(a, b, tol) { return Math.abs(a - b) <= (tol == null ? 0.5 : tol)
   ok("konsolidace: delší splatnost snižuje měsíční zatížení", r.monthlySaving > 0, r.monthlySaving.toFixed(0));
 })();
 
+/* 13f) Porovnání dob splatnosti 30 vs 35 let. */
+(function () {
+  var r = C.compareTerms(4000000, 5, [360, 420]);
+  ok("compareTerms: dva výsledky", r.length === 2);
+  ok("compareTerms: delší doba → nižší splátka", r[1].payment < r[0].payment, r[0].payment.toFixed(0) + " vs " + r[1].payment.toFixed(0));
+  ok("compareTerms: delší doba → vyšší celkové úroky", r[1].totalInterest > r[0].totalInterest);
+  ok("compareTerms: totalPaid = jistina + úrok", approx(r[0].totalPaid, 4000000 + r[0].totalInterest, 1));
+})();
+
+/* 13g) Dopad mimořádné splátky. */
+(function () {
+  var r = C.extraPaymentImpact(3000000, 5, 300, 5000);
+  ok("extraPayment: zkrátí dobu", r.monthsSaved > 0, r.monthsSaved);
+  ok("extraPayment: ušetří úroky", r.interestSaved > 0, r.interestSaved.toFixed(0));
+  ok("extraPayment: newMonths < baseMonths", r.newMonths < r.baseMonths);
+  var none = C.extraPaymentImpact(3000000, 5, 300, 0);
+  ok("extraPayment: bez extra nic neušetří", none.monthsSaved === 0 && approx(none.interestSaved, 0, 0.5));
+})();
+
 /* 13) URL state — round trip. */
 (function () {
   var params = { cena: 5000000, vlastni: 1200000, uver: 3800000, sazba: 4.5, doba: 30, typ: "vlastni", mlady: true };

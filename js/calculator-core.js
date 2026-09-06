@@ -311,6 +311,35 @@
     };
   }
 
+  /**
+   * Porovnání dob splatnosti (např. 30 vs 35 let).
+   * Vrací pole { termMonths, years, payment, totalInterest, totalPaid }.
+   */
+  function compareTerms(principal, annualRatePct, termsMonths) {
+    return (termsMonths || []).map(function (n) {
+      var pay = calculateMonthlyPayment(principal, annualRatePct, n);
+      var totalPaid = pay * n;
+      return { termMonths: n, years: n / 12, payment: pay, totalPaid: totalPaid, totalInterest: totalPaid - principal };
+    });
+  }
+
+  /**
+   * Dopad mimořádné (pravidelné měsíční) splátky navíc.
+   * Vrací { baseMonths, newMonths, monthsSaved, interestSaved, baseInterest, newInterest }.
+   */
+  function extraPaymentImpact(balance, annualRatePct, remainingMonths, extraMonthly) {
+    var base = generateAmortizationSchedule(balance, annualRatePct, remainingMonths, {});
+    var withExtra = generateAmortizationSchedule(balance, annualRatePct, remainingMonths, { extraMonthly: extraMonthly || 0 });
+    return {
+      baseMonths: base.months,
+      newMonths: withExtra.months,
+      monthsSaved: base.months - withExtra.months,
+      baseInterest: base.totalInterest,
+      newInterest: withExtra.totalInterest,
+      interestSaved: base.totalInterest - withExtra.totalInterest
+    };
+  }
+
   /* --- URL state (sdílení scénáře odkazem) --- */
   var STATE_KEYS = ["cena", "odhad", "vlastni", "uver", "sazba", "doba", "typ", "mlady",
                     "fixace", "sazbaPo", "extraMesic", "prijem", "vydaje", "zavazky"];
@@ -355,6 +384,8 @@
     combinedLtv: combinedLtv,
     lowerAppraisalImpact: lowerAppraisalImpact,
     consolidation: consolidation,
+    compareTerms: compareTerms,
+    extraPaymentImpact: extraPaymentImpact,
     stressTestRate: stressTestRate,
     stressTestIncome: stressTestIncome,
     serializeState: serializeState,

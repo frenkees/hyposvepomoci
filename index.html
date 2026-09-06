@@ -60,6 +60,7 @@
         <li><a href="#uroky">Úroky a fixace</a></li>
         <li><a href="#pozor">Na co si dát pozor</a></li>
         <li><a href="#vlastni-zdroje">Nemám dost vlastních zdrojů</a></li>
+        <li><a href="#splaceni">Splácení a refinancování</a></li>
         <li><a href="#predcasne">Předčasné splacení</a></li>
         <li><a href="#dane">Daňové odpočty</a></li>
         <li><a href="#kalkulacka">Kalkulačka</a></li>
@@ -315,6 +316,26 @@
       </div>
     </section>
 
+    <!-- Rozhodovací nástroje: splácení (P2) -->
+    <section class="section" id="splaceni">
+      <div class="container">
+        <h2>Splácení: rozhodovací nástroje</h2>
+        <p class="section__lead">Kratší nebo delší doba? Poslat peníze do hypotéky, nebo si nechat rezervu? Vyplatí se refinancovat? Spočítejte si to.</p>
+
+        <h3 style="margin-top:var(--sp-8)">Kolik mě stojí delší hypotéka? (30 vs 35 let)</h3>
+        <p class="text-muted">Nižší <button class="term" data-term="anuita">měsíční splátka</button> nemusí znamenat levnější hypotéku — za delší dobu zaplatíte víc na úrocích.</p>
+        <div class="card" id="tool-doba"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Poslat peníze do hypotéky, nebo si nechat rezervu?</h3>
+        <p class="text-muted">Mimořádná splátka uspoří na <button class="term" data-term="urok">úrocích</button> — ale rezerva bývá důležitější než rychlé splacení.</p>
+        <div class="card" id="tool-extra"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Vyplatí se refinancovat?</h3>
+        <p class="text-muted"><button class="term" data-term="refinancovani">Refinancování</button> má smysl, když úspora převáží náklady. Rozhoduje break-even.</p>
+        <div class="card" id="tool-refi"></div>
+      </div>
+    </section>
+
     <!-- Nástroje (Fáze 3) -->
     <section class="section" id="nastroje">
       <div class="container">
@@ -396,6 +417,7 @@
   <script src="js/calculator-ui.js"></script>
   <script src="js/affordability.js"></script>
   <script src="js/equity.js"></script>
+  <script src="js/repayment.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/tax-calculator.js"></script>
   <script src="js/early-repayment.js"></script>
