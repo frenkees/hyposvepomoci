@@ -4,6 +4,25 @@ Interaktivní hypoteční průvodce pro laickou veřejnost (ČR). Provede člov�
 
 > ⚠️ Web slouží pouze ke vzdělávacím účelům a nepředstavuje finanční, právní ani daňové poradenství.
 
+**▶ Živé demo: [hyposvepomoci.vercel.app](https://hyposvepomoci.vercel.app)**
+
+| Úvod | Kalkulačka | Mobil |
+|---|---|---|
+| ![Úvod](docs/screenshots/uvod.webp) | ![Kalkulačka](docs/screenshots/kalkulacka.webp) | ![Mobil](docs/screenshots/mobil.webp) |
+
+## Co umí
+
+- **Průvodce „Jsem připraven na hypotéku?“** — pár otázek a orientační výsledek, bez odesílání dat.
+- **Kalkulačka** — splátka, LTV vůči odhadu, rezerva po koupi, stres test a tři úrovně rozpočtu (maximum / rozumný / komfortní). Scénář jde sdílet odkazem.
+- **Daňový odpočet** podle roku obstarání, **rozhodovací strom předčasného splacení**, **překladač bankovní nabídky**, checklisty před podpisem a otázky na bankéře, slovníček.
+- **Štítky váhy informace** u každého tvrzení: 🟢 ZÁKON / 🔵 DOPORUČENÍ / 🟣 PRAKTICKÁ RADA.
+- **Datová vrstva:** všechna regulatorní čísla jsou v `data/*.json` se zdrojem a datem ověření, v HTML nic natvrdo.
+- **Prémiové nástroje** jsou zatím jen UX demo (zamčené karty). Prémiový obsah v repu není.
+
+## Stack
+
+HTML + CSS + vanilla JavaScript bez buildu · JSON datová vrstva · Chart.js (lazy-load, s textovým fallbackem) · testy v čistém Node.js · Vercel (statický hosting)
+
 ## Spuštění
 
 Web čte `data/*.json` přes `fetch`, takže musí běžet přes HTTP server (ne z `file://`):
@@ -56,3 +75,15 @@ CLAUDE.md             Konvence a kritická pravidla
 ## Ověřování dat
 
 Před publikací a periodicky ověřovat všechna čísla (`verifiedAt` v `data/*.json`) proti: ČNB, Finanční správa, MF ČR, ČÚZK, SFPI.
+
+## Jak vzniklo s Claude Code
+
+Web jsem postavil s Claude Code podle předem sepsaného plánu. Všechny commity mají Claude jako spoluautora.
+
+- [`PLAN.md`](PLAN.md) — kompletní plán: designové principy, kritická pravidla, datový model a fáze,
+- [`CLAUDE.md`](CLAUDE.md) — konvence a kritická pravidla pro Clauda (žádná čísla natvrdo, paywall jen jako demo, …),
+- `js/calculator-core.test.js` — matematika kalkulačky má testy a vznikala jako první, před UI.
+
+## Licence
+
+[MIT](LICENSE) © 2026 Pavel Procházka
