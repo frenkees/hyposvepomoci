@@ -1,0 +1,132 @@
+/* ==========================================================================
+   calculator.css — Kalkulačka (Fáze 2)
+   ========================================================================== */
+
+/* minmax(0, …) brání „grid blowout“ — bez něj by se sloupec roztáhl na max-content obsahu. */
+.calc { display: grid; gap: var(--sp-8); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .calc { grid-template-columns: minmax(320px, 380px) minmax(0, 1fr); align-items: start; } }
+/* Explicitní minmax(0,1fr) i pro vnitřní jednosloupcové gridy — jinak se roztáhnou na max-content. */
+.calc__inputs, .calc__outputs { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+
+/* --- Vstupy --- */
+.calc__inputs { display: grid; gap: var(--sp-4); }
+.calc__group { display: grid; gap: var(--sp-4); }
+.calc__group + .calc__group { padding-top: var(--sp-4); border-top: 1px solid var(--color-border); }
+
+.field { display: grid; gap: var(--sp-1); }
+.field label { font-family: var(--font-heading); font-weight: 600; font-size: 0.9rem; color: var(--color-text-secondary); }
+.field__hint { font-size: 0.8rem; color: var(--color-text-muted); }
+.field__input { display: flex; align-items: center; gap: var(--sp-2); }
+.field input[type="text"], .field select {
+  font-size: 1.05rem; padding: var(--sp-3); border: 1px solid var(--color-border);
+  border-radius: var(--radius); font-family: var(--font-body); width: 100%; background: var(--color-surface);
+}
+.field__suffix { font-size: 0.9rem; color: var(--color-text-muted); white-space: nowrap; }
+.field input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 28px; }
+.field__rangeval { font-family: var(--font-heading); font-weight: 600; color: var(--color-primary-dark); }
+
+.calc__advanced-toggle { background: none; border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-3); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); cursor: pointer; text-align: left; }
+.calc__share { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+.seg { display: inline-flex; border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; }
+.seg button { border: none; background: var(--color-surface); padding: var(--sp-2) var(--sp-4); font-family: var(--font-heading); font-weight: 600; font-size: 0.9rem; cursor: pointer; color: var(--color-text-secondary); min-height: 40px; }
+.seg button[aria-pressed="true"] { background: var(--color-primary); color: #fff; }
+.seg--sm button { padding: var(--sp-1) var(--sp-3); min-height: 34px; font-size: 0.82rem; }
+
+/* --- Další zdroje financování (Režim B) --- */
+.aff-sources > summary { font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); cursor: pointer; padding: var(--sp-2) 0; }
+.aff-src { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-3) var(--sp-4); margin-bottom: var(--sp-3); background: var(--color-surface); }
+.aff-src__head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; }
+.aff-src__label { font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; color: var(--color-text); }
+.aff-src__hint { font-size: 0.8rem; color: var(--color-text-muted); margin: var(--sp-1) 0 0; }
+.aff-src__body { display: grid; gap: var(--sp-3); margin-top: var(--sp-3); }
+
+/* --- Výstupy --- */
+.calc__outputs { display: grid; gap: var(--sp-6); }
+.calc__disclaimer { font-size: 0.85rem; color: var(--color-text-muted); border-left: 3px solid var(--color-secondary); padding-left: var(--sp-3); }
+
+.metrics { display: grid; gap: var(--sp-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 620px) { .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.metric { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); }
+.metric__label { font-size: 0.82rem; color: var(--color-text-muted); font-family: var(--font-heading); }
+.metric__value { font-family: var(--font-heading); font-weight: 700; font-size: 1.4rem; color: var(--color-primary-dark); margin-top: 2px; }
+.metric__value small { font-size: 0.9rem; font-weight: 600; }
+
+/* Indikátor stavu (LTV/DSTI/DTI) */
+.ind { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-family: var(--font-heading); font-weight: 600; margin-top: var(--sp-1); }
+.ind__dot { width: 10px; height: 10px; border-radius: 50%; }
+.ind--green .ind__dot { background: var(--color-success); } .ind--green { color: var(--color-success); }
+.ind--amber .ind__dot { background: var(--color-warning); } .ind--amber { color: var(--color-warning); }
+.ind--red .ind__dot { background: var(--color-danger); } .ind--red { color: var(--color-danger); }
+
+/* "Co to pro mě znamená" */
+.means-box { background: var(--color-info-bg); border-radius: var(--radius); padding: var(--sp-4); }
+.means-box h4 { margin: 0 0 var(--sp-2); font-size: 1rem; }
+
+/* Rozpad vlastní zdroje ≠ peníze + rozpočet + rezerva */
+.breakdown { display: grid; gap: var(--sp-1); }
+.breakdown__row { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-2) 0; border-bottom: 1px dashed var(--color-border); }
+.breakdown__row--total { border-bottom: none; border-top: 2px solid var(--color-border); font-family: var(--font-heading); font-weight: 700; padding-top: var(--sp-3); }
+.breakdown__row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* A / B / C dostupnost */
+.abc { display: grid; gap: var(--sp-3); }
+@media (min-width: 720px) { .abc { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.abc__card { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); }
+.abc__card--c { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+.abc__tag { font-family: var(--font-heading); font-weight: 700; font-size: 0.78rem; letter-spacing: .04em; color: var(--color-text-muted); }
+.abc__val { font-family: var(--font-heading); font-weight: 700; font-size: 1.25rem; color: var(--color-primary-dark); }
+
+/* Stres test tabulky */
+.stress { display: grid; gap: var(--sp-6); min-width: 0; }
+.stress > div { min-width: 0; overflow-x: auto; }
+@media (min-width: 720px) { .stress { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
+.stress table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.stress th, .stress td { text-align: left; padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); font-variant-numeric: tabular-nums; }
+.stress th { font-family: var(--font-heading); color: var(--color-text-secondary); }
+.stress td.neg { color: var(--color-danger); font-weight: 600; }
+
+/* Grafy (naplní charts.js ve Fázi 3) */
+.charts { display: grid; gap: var(--sp-6); }
+@media (min-width: 720px) { .charts { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } }
+.chart-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); }
+.chart-card h4 { margin: 0 0 var(--sp-3); font-size: 1rem; }
+.chart-card__canvas { position: relative; height: 260px; }
+
+/* Amortizační tabulka (Fáze 3) */
+.amort { overflow-x: auto; }
+.amort-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.amort-table th, .amort-table td { padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.amort-table th { font-family: var(--font-heading); color: var(--color-text-secondary); text-align: right; }
+.amort-table th:first-child, .amort-table td:first-child { text-align: left; }
+.amort-table td { text-align: right; }
+
+/* --- Přepínač režimů A/B --- */
+.calc-mode { display: inline-flex; gap: var(--sp-1); background: var(--color-surface-alt); border-radius: var(--radius); padding: 4px; margin-bottom: var(--sp-6); flex-wrap: wrap; }
+.calc-mode__btn { border: none; background: transparent; padding: var(--sp-2) var(--sp-4); border-radius: var(--radius); font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; color: var(--color-text-secondary); cursor: pointer; min-height: 44px; }
+.calc-mode__btn[aria-pressed="true"] { background: var(--color-primary); color: #fff; box-shadow: var(--shadow-sm); }
+
+/* --- Tři úrovně dostupnosti --- */
+.tiers { display: grid; gap: var(--sp-3); grid-template-columns: minmax(0,1fr); margin: var(--sp-4) 0; }
+@media (min-width: 640px) { .tiers { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.tier { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--sp-4); background: var(--color-surface); }
+.tier--rozumny { border-color: var(--color-primary); box-shadow: var(--shadow-sm); }
+.tier__label { font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; letter-spacing: .03em; color: var(--color-text-muted); text-transform: uppercase; }
+.tier__price { font-family: var(--font-heading); font-weight: 700; font-size: 1.5rem; color: var(--color-primary-dark); margin: var(--sp-1) 0; }
+.tier__meta { font-size: 0.85rem; color: var(--color-text-secondary); }
+.tier__note { font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--sp-2); }
+
+/* --- Personalizovaná hypoteční karta --- */
+.hcard { border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden; }
+.hcard__row { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--color-border); }
+.hcard__row:last-child { border-bottom: none; }
+.hcard__row--strong { background: var(--color-surface-alt); font-family: var(--font-heading); font-weight: 700; }
+.hcard__row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+.hcard__v--neg { color: var(--color-danger); }
+.hcard__v--pos { color: var(--color-success); }
+.hcard__v--warn { color: var(--color-warning); }
+
+.how { margin-top: var(--sp-4); border: 1px solid var(--color-border); border-radius: var(--radius); background: var(--color-surface); }
+.how > summary { cursor: pointer; padding: var(--sp-3) var(--sp-4); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); }
+.how > div { padding: 0 var(--sp-4) var(--sp-4); }
+.confidence-note { font-size: 0.85rem; color: var(--color-text-muted); margin-top: var(--sp-3); }

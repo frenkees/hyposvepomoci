@@ -1,0 +1,77 @@
+/* ==========================================================================
+   terms.css — Systém pojmů: term (tooltip) + detail modal (Fáze P1)
+   ========================================================================== */
+
+/* --- Term (klikací pojem s tooltipem) --- */
+.term {
+  position: relative;
+  display: inline;
+  font: inherit;
+  color: var(--color-primary-light);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: help;
+  text-decoration: underline dotted var(--color-secondary);
+  text-underline-offset: 3px;
+}
+.term:hover { color: var(--color-primary); }
+
+/* Tooltip */
+.term__tip {
+  position: absolute;
+  left: 0; bottom: 100%;
+  transform: translateY(-6px);
+  z-index: 60;
+  width: max-content; max-width: 260px;
+  background: var(--color-primary-dark);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: none;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  opacity: 0; visibility: hidden;
+  transition: opacity .12s, visibility .12s;
+  pointer-events: none;
+}
+.term:hover .term__tip, .term:focus-visible .term__tip { opacity: 1; visibility: visible; }
+@media (max-width: 640px) { .term__tip { display: none; } } /* na mobilu jen detail po tapu */
+
+/* --- Detail modal --- */
+.term-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: var(--sp-4); }
+.term-modal__backdrop { position: absolute; inset: 0; background: rgba(13, 43, 62, 0.55); }
+.term-modal__panel {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  max-width: 560px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  padding: var(--sp-8);
+}
+.term-modal__close {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--color-border); background: var(--color-surface);
+  font-size: 1rem; cursor: pointer; color: var(--color-text-secondary);
+}
+.term-modal__close:hover { background: var(--color-surface-alt); }
+.term-modal__eyebrow { font-family: var(--font-heading); font-size: 0.75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--color-text-muted); }
+.term-modal__title { margin: var(--sp-1) 0 var(--sp-2); }
+.term-modal__abbr { font-size: 1rem; font-weight: 500; color: var(--color-text-muted); }
+.term-modal__lead { font-size: 1.1rem; color: var(--color-text-secondary); }
+.term-modal__body h4 { margin: var(--sp-4) 0 var(--sp-1); font-size: 1rem; color: var(--color-primary); }
+.term-modal__deep { margin: var(--sp-4) 0; border: 1px solid var(--color-border); border-radius: var(--radius); }
+.term-modal__deep > summary { cursor: pointer; padding: var(--sp-3) var(--sp-4); font-family: var(--font-heading); font-weight: 600; color: var(--color-primary); }
+.term-modal__deep > p { padding: 0 var(--sp-4) var(--sp-4); margin: 0; }
+.term-modal__k { font-family: var(--font-heading); font-weight: 600; font-size: 0.85rem; color: var(--color-text-secondary); }
+.term-modal__related { margin-top: var(--sp-4); display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.term-chip { background: var(--color-info-bg); color: var(--color-primary); border: 1px solid var(--color-border); border-radius: 999px; padding: 4px 12px; font-family: var(--font-heading); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+.term-chip:hover { background: var(--color-secondary-light); }
+.term-modal__sources { margin-top: var(--sp-4); font-size: 0.9rem; }
+.term-modal__sources ul { margin: var(--sp-1) 0 0; }
+.term-modal__foot { margin-top: var(--sp-6); }

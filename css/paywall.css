@@ -1,0 +1,39 @@
+/* ==========================================================================
+   paywall.css — Prémiové (locked) karty (Fáze 4)
+   Vizuální náznak, že jde o prémiový obsah. Žádný skutečný obsah tu není.
+   ========================================================================== */
+
+.premium-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--sp-6);
+  overflow: hidden;
+}
+.premium-card h3 { font-size: 1.05rem; margin-bottom: var(--sp-2); }
+.premium-card__teaser { color: var(--color-text-secondary); margin: 0; }
+.premium-card__lock {
+  position: absolute; top: var(--sp-3); right: var(--sp-3);
+  font-size: 1.1rem; opacity: 0.5;
+}
+.premium-card__overlay {
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px dashed var(--color-border);
+}
+/* Jemný „zamčený“ nádech spodní části karty (jen vizuální, obsah tu není). */
+.premium-card::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+  opacity: 0.6;
+}
+
+.premium-cta {
+  margin-top: var(--sp-8);
+  text-align: center;
+  background: var(--color-info-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-8) var(--sp-6);
+}

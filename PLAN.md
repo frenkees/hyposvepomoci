@@ -6,6 +6,35 @@ Cíl je responzivní web, který laickou veřejnost provede hypotékou **od prvn
 
 **Filozofie**: Datově řízený systém, ne statické články. Legislativa se mění (LTV má stále závazné hranice, DTI/DSTI už ne, investiční nemovitosti mají od 1. 4. 2026 přísnější doporučení) — proto všechna časově citlivá data žijí v centrální datové vrstvě, ne zadrátovaná v HTML.
 
+**Hlavní kritérium**: web musí být srozumitelný člověku, který o hypotékách neví skoro nic. Proto jdeme spíš cestou **decision-support** (rozhodovací podpory) než množství informací. Kalkulačka není samostatná funkce, ale nástroj používaný v rozhodovacích bodech.
+
+---
+
+## 🧭 Hlavní designový princip (řídí celý web)
+
+**Každá informace musí odpovědět nejen na "Co to je?", ale — kde je to relevantní — také na "Co to pro mě znamená?" a "Co mám udělat dál?".**
+
+Tři úrovně u každého klíčového pojmu/ukazatele:
+1. **Co to je?** — krátká definice (pojmová úroveň)
+2. **Co to pro mě znamená?** — interpretace konkrétního scénáře uživatele (rozhodovací úroveň)
+3. **Co dál?** — akční krok / doporučení
+
+Aplikuje se u: LTV, DSTI, DTI, RPSN, fixace, úrok, odhad, mimořádná splátka, refinancování, daňový odpočet, rezerva.
+
+### Tři odpovědi u každého klíčového výstupu
+Aby uživatel nezaměnil "banka mi půjčí" za "měl bych si tolik půjčit", u důležitých výstupů rozlišujeme tři pohledy vizuálně odlišenými štítky:
+- **🏦 Co může chtít / posuzovat banka**
+- **⚖️ Co vyžaduje regulace** (závazné vs. doporučené)
+- **🧠 Co dává smysl pro vás** (kolik zbyde, rezerva, bezpečnost)
+
+### Typ informace (confidence label) u každého tvrzení
+Každé tvrzení nese jeden ze tří štítků, aby laik okamžitě viděl váhu informace:
+- **🟢 ZÁKON** — zákonný fakt / závazný limit (např. závazný LTV)
+- **🔵 DOPORUČENÍ / METODIKA** — např. obezřetnostní doporučení ČNB (DSTI/DTI)
+- **🟣 PRAKTICKÁ RADA** — názor/zkušenost autora (např. "vyplatí se porovnat víc nabídek")
+
+Štítek se odvozuje z pole `confidence` v datové vrstvě (viz níže) tam, kde jde o data; u edukačního obsahu je nastaven ručně. Rozdíl mezi "tohle je zákon", "tohle je doporučení" a "tohle je rada" je u finančního webu mimořádně cenný.
+
 ---
 
 ## ⚠️ KRITICKÁ PRAVIDLA (předat Claude Code doslova)
@@ -91,7 +120,7 @@ content/
 }
 ```
 
-Každá hodnota nese: `value`, `binding`, `validFrom`, `source`, `sourceUrl`, `verifiedAt`, `note`. UI hodnoty **čte z JSON**, nikdy je nemá napsané natvrdo.
+Každá hodnota nese: `value`, `binding`, `validFrom`, `source`, `sourceUrl`, `verifiedAt`, `note` a **`confidence`** (`"zakon"` / `"doporuceni"` / `"rada"` — řídí štítek typu informace v UI). UI hodnoty **čte z JSON**, nikdy je nemá napsané natvrdo.
 
 ---
 
@@ -116,27 +145,51 @@ Místo `<!-- VERIFY -->` komentářů: každé právní/číselné tvrzení v HT
 
 ## Struktura webu
 
-### 0. Hero + User Journey (vstupní rozcestník)
-Místo aby web začínal "Co je hypotéka", začne otázkou **"V jaké jste situaci?"** s dlaždicemi, které uživatele odscrollují na relevantní část:
-- Teprve začínám
-- Chci koupit nemovitost
-- Už vybírám hypotéku
-- Mám hypotéku
-- Končí mi fixace
-- Chci refinancovat
+### 0. Hero + Průvodce "Jsem připraven na hypotéku?"
+Místo pouhého rozcestníku ("V jaké jste situaci?") je vstupním bodem **skutečný interaktivní průvodce**: *"Pojďme zjistit, jestli jste na hypotéku připraveni."*
 
-Tím se odbourá problém "obrovský text, nevím kde začít". Kalkulačka a průvodce jsou provázané.
+**6–8 jednoduchých otázek** (jeden krok = jedna otázka, žádný formulářový nával):
+1. Kupujete pro vlastní bydlení? (vlastní / investice)
+2. Kolik stojí nemovitost?
+3. Kolik máte vlastních peněz?
+4. Jaký je čistý příjem domácnosti?
+5. Máte další úvěry / závazky?
+6. Kolik vám je? (kvůli hranici <36 let)
+7. Jste zaměstnanec / OSVČ?
+8. Máte nemovitost už vybranou?
+
+**Výsledek — barevně kódovaný přehled situace** (ne verdikt, ale orientace):
+```
+Vaše situace
+🟢 Vlastní zdroje: pravděpodobně dostačující
+🟡 LTV: blízko regulatorní hranice
+🟢 Příjmové zatížení: v doporučeném pásmu
+🔴 Rezerva po nákupu: nízká
+
+Co bych řešil jako první: vytvořit finanční rezervu.
+[Pokračovat na kalkulačku]
+```
+Pro laika mnohem silnější než "tady je 13 sekcí, vyber si". Průvodce předává hodnoty do kalkulačky (přes URL state / předvyplnění).
+
+**Sekundárně** zůstává rychlý rozcestník "V jaké jste situaci?" (Teprve začínám / Chci koupit / Vybírám hypotéku / Mám hypotéku / Končí mi fixace / Chci refinancovat) pro vracející se návštěvníky, kteří průvodce nepotřebují.
 
 ### 1. Co je hypotéka
 - Srozumitelné vysvětlení, rozdíl oproti spotřebitelskému úvěru a stavebnímu spoření
 - Úvod do terminologie (jistina, úrok, anuita, fixace, LTV, DSTI/DTI)
-- Vizuální diagram toku peněz
+- **Timeline peněz** (místo obecného diagramu toku peněz) — kdy uživatel skutečně potřebuje peníze:
+```
+KUPUJETE BYT
+   │  vlastní peníze  +  hypotéka
+   ▼
+PRODÁVAJÍCÍ  →  KATASTR  →  banka získá zástavu
+```
+S doprovodným "Kdy skutečně potřebujete peníze?" — pro první kupující zásadní.
 
 ### 2. Jak na hypotéku krok za krokem (timeline)
 1. Zjistěte, kolik si můžete dovolit
 2. Naspořte vlastní zdroje (podle LTV — viz níže)
 3. Vybírejte nemovitost (s pre-approval)
-4. Porovnejte nabídky bank (min. 3–5)
+4. Porovnejte více než jednu nabídku (u většího úvěru může být užitečné získat několik konkurenčních nabídek — méně dogmaticky než "vždy 3–5 bank")
 5. Podejte žádost (checklist dokumentů)
 6. Odhad nemovitosti — u bytů ve městech banky často dělají **online (desktop) odhad zdarma** z cenových map; laici zbytečně platí vlastního odhadce, jehož posudek banka nemusí akceptovat
 7. Schválení a podpis smlouvy
@@ -166,8 +219,9 @@ Rozděleno do praktických kategorií (ne obecné "co banky kontrolují"):
 ### 5. Úroky a fixace
 - **5a. Co skutečně ovlivňuje sazbu hypotéky?** — řetězec: měnová politika → tržní sazby → náklady financování bank → marže + riziko klienta → nabídnutá sazba. **NEpoužívat zjednodušení "repo → PRIBOR → marže"**. PRIBOR jen jako vysvětlený pojem ve slovníčku (web ho nesmí automaticky tahat z ČNB a redistribuovat — komerční užití je omezené).
 - **5b. Fixační období** (1, 3, 5, 7, 10, 15, 20 let) — pro/proti, rozhodovací framework
-- **5c. Konec fixace** — banky počítají s leností klientů, vždy porovnat, okno pro refinancování/splacení bez sankce
+- **5c. Konec fixace** — po skončení fixace nemusí být automaticky nejlepší přijmout první nabídku své banky (proč: vysvětlit — nová nabídka bývá méně konkurenční, banka nemusí sama nabídnout nejnižší sazbu). Okno pro refinancování / splacení bez sankce. Formulace **bez generalizace typu "banky počítají s leností klientů"**.
 - Tabulka typických spreadů mezi fixacemi
+- **Rozhodovací strom fixace**: Chci jistotu splátky? → delší fixace. Jsem ochoten nést riziko změny sazby (a mám rezervu)? → kratší fixace. Vždy s upozorněním, že nejde o univerzální doporučení.
 
 ### 6. Na co si dát pozor (přejmenováno z "co banky neříkají")
 Méně konfrontační, prakticky užitečné.
@@ -203,6 +257,8 @@ Odkaz na zdroje (MF ČR, zákon č. 257/2016 Sb. + novela účinná od 1. 9. 202
 - Kdy se vyplatí, proces, náklady (nový odhad, nový zápis zástavního práva)
 - Break-even pravidlo (napojeno na refinanční kalkulačku)
 - Provázáno se sekcí 7 (předčasné splacení)
+- **Rozhodovací strom refinancování**: Končí fixace? → Porovnat nabídku současné banky → Porovnat konkurenci → Spočítat celkové náklady (vč. nákladů refinancování) → Break-even.
+- **Rozhodovací strom mimořádné splátky**: Mám volné peníze? → Mám dostatečnou rezervu? → Je mimořádná splátka výhodnější než alternativní použití peněz? (aby lidé nesplatili hypotéku na úkor rezervy)
 
 ### 9. Daňové odpočty → interaktivní kalkulátor
 Ne pouhý text. Kalkulátor z `tax.json`:
@@ -219,10 +275,67 @@ Přejmenováno z "SFPI půjčky do 36 let" (program Vlastní bydlení je archivo
 - Aktuálně otevřeno / Aktuálně uzavřeno / Pouze pro stávající smlouvy / Archivováno
 - Tím web nezůstane s "mrtvým" programem.
 
-### 11. Slovníček pojmů (z `glossary.json`)
-Anuita, BRKI/NRKI, ČNB, DSTI, DTI, Fixace, Jistina, Katastr, LTV, PRIBOR, Refinancování, RPSN, Vinkulace, Zástavní právo, Plomba, atd.
+### 11. Slovníček v normální češtině (z `glossary.json`, dvě úrovně)
+Každý pojem má dvě úrovně:
+- **Rychlé vysvětlení** (jedna věta): *"Fixace = doba, po kterou máte sjednanou úrokovou sazbu."*
+- **Chci tomu opravdu rozumět** (rozbalit): *Co se stane na konci fixace? Co může banka změnit? Kdy začít řešit refinancování? Co když sazbu nepřijmu?*
 
-### 12. Prémiový obsah — viz Monetizace
+Pojmy: Anuita, BRKI/NRKI, ČNB, DSTI, DTI, Fixace, Jistina, Katastr, LTV, PRIBOR, Refinancování, RPSN, Vinkulace, Zástavní právo, Plomba, RPSN vs. úrok, atd. `glossary.json` má u každého pojmu `short` a `deep`.
+
+### 12. Příklad s reálnou rodinou (pedagogicky klíčové)
+Fiktivní rodina provedená **celým procesem** — laikovi vysvětlí hypotéku lépe než deset stran textu:
+```
+Jan a Petra
+Čistý příjem: 72 000 Kč · Nemovitost: 5 200 000 Kč
+Úspory: 1 100 000 Kč · Hypotéka: 4 100 000 Kč · Úrok 4,5 % · 30 let
+```
+Kroky: (1) Kolik potřebují vlastních zdrojů? (2) Jaké mají LTV? (3) Jaká je splátka? (4) Jak vypadá splátka při 6 %? (5) Kolik jim zbyde po zaplacení bydlení? (6) Co musí řešit s bankou? (7) Co se stane na konci fixace? Provázané s živou kalkulačkou (tlačítko "Přenést do kalkulačky").
+
+### 13. Překladač bankovní nabídky do lidské řeči
+Uživatel zadá parametry z konkrétní nabídky (úrok, RPSN, fixace, LTV, podmínky) a web vysvětlí, co znamenají a na co si dát pozor:
+```
+Úrok 4,59 %  →  není celý příběh
+RPSN 4,82 %  →  skutečná cena vč. poplatků
+Podmínka sazby: účet + pojištění
+
+Co si před podpisem ověřit:
+☑ Je sazba podmíněna používáním účtu?
+☑ Je podmíněna pojištěním?
+☑ Co se stane, když podmínku přestanu splňovat?
+```
+Základní verze free, personalizovaná varianta může být premium.
+
+### 14. Checklist "Před podpisem hypotéky" (základní verze ZDARMA)
+Ne až jako premium doplněk. Free verze pokrývá:
+- **Úvěr**: ☐ znám úrok ☐ znám RPSN ☐ rozumím fixaci ☐ vím, co bude po fixaci
+- **Náklady**: ☐ vím o všech poplatcích ☐ vím, kolik stojí pojištění ☐ vím, které služby jsou podmínkou sazby
+- **Předčasné splacení**: ☐ rozumím pravidlům
+- **Nemovitost**: ☐ znám hodnotu odhadu ☐ rozumím LTV ☐ mám vyřešené zástavní právo
+
+Premium: personalizovaný checklist podle konkrétní situace uživatele.
+
+### 15. Otázky, které položit bankéři (+ "Zkopírovat do telefonu")
+Přímo v průvodci, praktický nástroj na první schůzku:
+- „Jaká bude moje sazba bez pojištění?“
+- „Co musím splnit pro tuto sazbu?“
+- „Kolik mě tyto podmínky stojí ročně?“
+- „Jaké jsou možnosti mimořádné splátky?“
+- „Jaké jsou podmínky předčasného splacení?“
+- „Jak banka určuje hodnotu nemovitosti?“
+
+Tlačítko **[Zkopírovat otázky do telefonu]**.
+
+### 16. Red flags při nabídce banky
+Jednoduché, ale pro laika výborné — barevně odlišené varovné vzory:
+- 🔴 *"Sazba 3,99 %"* → Pozor, zjistěte, za jakých podmínek této sazby dosáhnete.
+- 🟡 *"Pojištění je součástí nabídky"* → Zjistěte, zda je povinné, nebo jen podmínkou zvýhodněné sazby.
+- 🟡 *"Odhad zdarma"* → Zjistěte, zda jde o bankovní odhad a bude použitelný pro váš účel.
+
+### 17. Interaktivní FAQ "Co se stane, když…"
+Přirozenější způsob hledání než struktura učebnice:
+Co když banka ocení dům na méně, než kolik stojí? · Co když změním zaměstnání před čerpáním? · Co když budu chtít splatit za 5 let? · Co když se rozvedeme? · Co když jeden z nás zemře? · Co když přijdu o práci? · Co když chci nemovitost pronajímat? · Co když chci koupit družstevní byt? · Co když mi banka nabídne horší sazbu než konkurence?
+
+### 18. Prémiový obsah — viz Monetizace
 
 ### Footer
 - Disclaimer: "Slouží pouze k vzdělávacím účelům, nepředstavuje finanční poradenství."
@@ -265,24 +378,61 @@ Anuita, BRKI/NRKI, ČNB, DSTI, DTI, Fixace, Jistina, Katastr, LTV, PRIBOR, Refin
   - "DSTI: aktuálně není závazný limit; ČNB doporučuje obezřetnost nad 40 %"
   - "DTI: aktuálně není závazný limit; obezřetnost nad 8×"
   - **NIKDY** "banka vám neschválí" u DSTI/DTI.
+- **Finanční rezerva po koupi** — first-class metrika (viz níže), ne odvozená drobnost.
 
-### Realistický rozpočet koupě (nová sekce kalkulačky)
+**"Co to pro mě znamená?" u každého ukazatele** — vedle čísla vždy interpretace scénáře + akční krok. Např. u LTV 86,9 %: *"Úvěr je vyšší než 80 % hodnoty zajištění. Pokud splňujete podmínky pro 90% hranici (<36 let, vlastní bydlení), scénář může být v mezích; jinak budete potřebovat víc vlastních zdrojů nebo jiné zajištění."* Platí pro LTV, DSTI, DTI, RPSN, fixaci, úrok, odhad, mimořádnou splátku, refinancování, daňový odpočet.
+
+**Tři pohledy 🏦 / ⚖️ / 🧠** u splátky a výše úvěru — např. u splátky 28 000 Kč: 🏦 banka posuzuje příjem a závazky · ⚖️ regulace: relevantní ukazatele · 🧠 vám po zaplacení bydlení zbyde X Kč. Zabraňuje záměně "banka mi půjčí" za "měl bych si tolik půjčit".
+
+### Vlastní zdroje ≠ vlastní peníze (vizuálně zdůraznit)
+Laikům často uniká, že úspory ≠ celá záloha. Vizuální rozpad:
+```
+Máte 1 200 000 Kč   ≠   celá záloha na koupi
+Rozdělte na:  ├─ část na koupi (doplatek do LTV)
+              ├─ náklady transakce (katastr, odhad, právní servis)
+              ├─ rekonstrukce / vybavení
+              └─ finanční rezerva
+```
+
+### Realistický rozpočet koupě
 Kolik peněz **reálně** potřebujete v den koupě — ne jen vlastní zdroje:
 ```
-Kupní cena − Hypotéka = Vlastní zdroje
+Kupní cena − Hypotéka = potřebné vlastní zdroje
 + rezerva, + vybavení, + rekonstrukce, + poplatek katastr,
 + odhad, + právní servis, + pojištění
-→ "Kolik potřebujete mít skutečně k dispozici"
+→ "Kolik potřebujete mít skutečně k dispozici v den koupě"
 ```
-Pro laika cennější než další graf.
 
-### Hypoteční stres test (USP, přímo pod hlavní kalkulačkou)
+### Finanční rezerva jako samostatná (first-class) metrika
+Rezerva ≠ vlastní zdroje. I když LTV vyjde 80 % ✅, dát všechny úspory do koupě je riziko. Kalkulačka explicitně upozorní:
+> ⚠️ Po koupi budete potřebovat hotovostní rezervu. Kolik vám zůstane po koupi?
+A spočítá zůstatek hotovosti po koupi + doporučené pásmo rezervy (např. 3–6 měsíčních výdajů domácnosti).
+
+### Tři otázky dostupnosti: A / B / C (klíčové pro laika)
+Web důsledně rozlišuje tři různé částky, aby uživatel nezaměnil "banka mi půjčí" za "můžu si to dovolit":
+- **A — Kolik mi může vyjít podle regulatorních/obezřetnostních ukazatelů?**
+- **B — Kolik mi banka může reálně schválit?**
+- **C — Kolik si BEZPEČNĚ můžu dovolit?** ← nejdůležitější
 ```
-Splátka dnes při X %:        ...
-Co když sazba po fixaci bude: 3 % / 5 % / 6 % / 7 % / 8 % → nové splátky
-→ "Dokázala by vaše domácnost splácet při sazbě +2 p. b.?"
+C — příklad:
+Příjem domácnosti 70 000 − splátka 27 000 − energie 7 000
+  − pojištění 2 000 − běžné výdaje 25 000 = zbývá ~9 000 Kč
+⚠️ Malá rezerva pro domácnost s dětmi.
 ```
-Navazuje na obezřetnostní logiku ČNB.
+"Kolik si můžu dovolit" (C) se v UI ukazuje **před** "kolik mi půjčí banka" (B).
+
+### Hypoteční stres test — DVĚ osy (USP, přímo pod hlavní kalkulačkou)
+Nejen úrokový, ale i příjmový šok:
+```
+Osa 1 — Úrokový šok:
+  sazba 3 / 4 / 5 / 6 / 7 % → splátky
+  "Dokázala by domácnost splácet při +2 p. b.?"
+
+Osa 2 — Příjmový šok:
+  příjem −10 % / −20 % / jeden příjem dočasně vypadne
+  → "Kolik vám zůstane po zaplacení hypotéky?"
+```
+Pro člověka uvažujícího o hypotéce užitečnější než další amortizační graf. Navazuje na obezřetnostní logiku ČNB.
 
 ### Grafy (Chart.js)
 1. Složení splátky v čase (stacked area) — jistina vs. úrok
@@ -296,9 +446,10 @@ Navazuje na obezřetnostní logiku ČNB.
 - Export CSV (free)
 
 ### Doplňkové kalkulátory
-- **"Kolik si mohu půjčit"** — příjem, závazky, doba, sazba → orientační max. výše (dle obezřetnosti, ne jako verdikt)
-- **Simulátor změny sazby** (napojený na stres test)
-- **Dopad mimořádné splátky** — ušetřené měsíce/úroky, nové datum splacení
+- **"Kolik si můžu bezpečně dovolit" (C)** — příjem, výdaje, závazky → kolik zbyde po splátce + rezerva; ukazuje se před B
+- **"Kolik mi banka může schválit" (B)** — orientační max. výše dle obezřetnosti (ne verdikt)
+- **Simulátor změny sazby** (napojený na dvouosý stres test)
+- **Dopad mimořádné splátky** — ušetřené měsíce/úroky, nové datum splacení + upozornění na rezervu
 - **Refinanční kalkulačka** (premium) — break-even
 
 ### Core funkce (`calculator-core.js`, bez DOM)
@@ -309,8 +460,11 @@ calculateLTV(loanAmount, collateralValue)          // vůči odhadu, ne ceně
 calculateDSTI(monthlyPayment, existingObligations, netMonthlyIncome)
 calculateDTI(totalLoanAmount, annualNetIncome)
 calculateRefinancingBreakeven(remainingBalance, remainingTerm, oldRate, newRate, costs)
-calculateMaxLoan(netMonthlyIncome, existingObligations, annualRate, termMonths, thresholds)
-stressTest(principal, remainingTerm, rateScenarios[])
+calculateMaxLoan(netMonthlyIncome, existingObligations, annualRate, termMonths, thresholds)  // B
+calculateAffordability(netIncome, livingCosts, obligations, monthlyPayment)  // C: zbytek + rezerva
+calculateCashAfterPurchase(ownFunds, downPayment, transactionCosts, renovation)  // rezerva
+stressTestRate(principal, remainingTerm, rateScenarios[])       // osa 1
+stressTestIncome(monthlyPayment, netIncome, incomeShockScenarios[])  // osa 2
 serializeState(params) / deserializeState(queryString)
 ```
 Formátování: `Intl.NumberFormat('cs-CZ', {style:'currency', currency:'CZK'})`. Debounce přes `requestAnimationFrame`.
@@ -365,18 +519,26 @@ Barevná logika indikátorů: **červená jen pro překročení závazného limi
 
 ## Monetizace
 
-### Free (většina obsahu)
-Veškerý edukační obsah, průvodce, hlavní kalkulačka se všemi grafy, stres test, realistický rozpočet, daňový kalkulátor, slovníček, LTV/DSTI/DTI orientace.
+### Obchodní princip: informace zdarma, rozhodovací nástroje placené
+Premium se neprodává jako "více informací", ale jako **personalizované rozhodovací nástroje**. Přesvědčivější hodnota:
+| Zdarma (vysvětlení) | Premium (rozhodnutí) |
+|---|---|
+| "Co je fixace?" | "Porovnejte 3 konkrétní nabídky, která vás za 5 let vyjde levněji" |
+| "Co je refinancování?" | "Zadejte parametry současné hypotéky a spočítejte break-even" |
+| "Na co si dát pozor ve smlouvě?" | "Projděte smlouvu krok za krokem personalizovaným checklistem" |
 
-### Prémiový obsah — "Hypotéka Pro"
-1. Podrobné porovnání bank (viz datová infrastruktura níže)
-2. Refinanční kalkulačka
+### Free (většina obsahu)
+Veškerý edukační obsah, průvodce "Jsem připraven na hypotéku?", hlavní kalkulačka se všemi grafy, dvouosý stres test, realistický rozpočet + rezerva, dostupnost A/B/C, daňový kalkulátor, slovníček, příklad rodiny, red flags, "Co se stane, když…", základní checklist před podpisem, otázky na bankéře, základní překladač nabídky.
+
+### Prémiový obsah — "Hypotéka Pro" (rozhodovací nástroje)
+1. Podrobné porovnání konkrétních nabídek bank (viz datová infrastruktura níže)
+2. Refinanční kalkulačka (break-even z reálných parametrů)
 3. Porovnání scénářů side-by-side
-4. Vyjednávací průvodce
-5. Interaktivní checklist s trackingem pokroku
+4. **Personalizovaný** checklist podle situace uživatele
+5. Personalizovaný překladač nabídky + vyjednávací průvodce
 6. PDF export (přes `@media print`, ne klientské PDF knihovny)
 7. Případové studie
-8. Strategie fixace
+8. Strategie fixace (hloubková analýza)
 
 **Porovnání bank vyžaduje datovou infrastrukturu** — ne statický text. `data/banks.json`:
 ```json
@@ -402,14 +564,18 @@ hyposvepomoci/
 ├── index.html
 ├── css/  main.css  sections.css  calculator.css  charts.css  paywall.css  print.css
 ├── js/
-│   ├── app.js               # nav, scroll spy, user-journey rozcestník
-│   ├── data-layer.js        # načtení data/*.json, fill .fact elementů, aktuálnost
-│   ├── calculator-core.js   # čistá matematika + URL state (bez DOM)
+│   ├── app.js               # nav, scroll spy, rozcestník
+│   ├── data-layer.js        # načtení data/*.json, fill .fact elementů, confidence štítky, aktuálnost
+│   ├── readiness-guide.js   # průvodce "Jsem připraven na hypotéku?" (6–8 otázek → barevný výsledek)
+│   ├── calculator-core.js   # čistá matematika + URL state (bez DOM): splátka, LTV, A/B/C, rezerva, stres testy
 │   ├── calculator-core.test.js
-│   ├── calculator-ui.js     # DOM binding, formátování, URL sync, stres test, rozpočet
+│   ├── calculator-ui.js     # DOM binding, formátování, URL sync, "Co to pro mě znamená", 🏦/⚖️/🧠, dvouosý stres test, rozpočet+rezerva
 │   ├── charts.js
 │   ├── tax-calculator.js
 │   ├── early-repayment.js   # rozhodovací strom
+│   ├── decision-trees.js    # stromy: fixace, refinancování, mimořádná splátka
+│   ├── offer-translator.js  # překladač bankovní nabídky do lidské řeči
+│   ├── checklists.js        # checklist před podpisem + otázky na bankéře (kopírování do telefonu)
 │   └── paywall.js           # soft gate (demo), bez skutečného obsahu v klientu
 ├── data/  regulatory.json  tax.json  early-repayment.json  banks.json  glossary.json
 ├── content/  legal/ concepts/ guides/ glossary/ calculators/
@@ -426,16 +592,18 @@ hyposvepomoci/
 - `data-layer.js` — načtení JSON, naplnění `.fact` elementů, tooltip zdrojů, tři vrstvy aktuálnosti
 - **Přesná verifikace všech čísel proti zdrojům k datu buildu** (ČNB, MF ČR, Finanční správa, ČÚZK)
 
-**Fáze 1 — Základ + průvodce**
-- `index.html` (user-journey rozcestník, sekce, footer), `main.css` + `sections.css`, `app.js`
+**Fáze 1 — Základ + průvodce + designový princip**
+- `index.html` (průvodce "Jsem připraven", sekce, footer), `main.css` + `sections.css`, `app.js`, `readiness-guide.js`
+- Implementovat napříč webem: štítky typu informace (🟢 ZÁKON / 🔵 DOPORUČENÍ / 🟣 RADA), vzor "Co to je? / Co to pro mě znamená? / Co dál?", tři pohledy 🏦/⚖️/🧠
 - Edukační obsah — texty jako placeholder s přesnými odbornými nadpisy, finální texty dodá uživatel
 
 **Fáze 2 — Kalkulačka (matematika první)**
-- `calculator-core.js` + `calculator-core.test.js` → testy MUSÍ projít
-- Až poté `calculator-ui.js`, `calculator.css`, LTV vůči odhadu, URL sdílení, realistický rozpočet, stres test
+- `calculator-core.js` + `calculator-core.test.js` → testy MUSÍ projít (splátka, LTV, A/B/C dostupnost, rezerva, oba stres testy)
+- Až poté `calculator-ui.js`, `calculator.css`, LTV vůči odhadu, URL sdílení, vlastní zdroje≠peníze, rozpočet+rezerva, dvouosý stres test, "Co to pro mě znamená"
 
-**Fáze 3 — Grafy + specializované kalkulátory**
-- `charts.js`, `tax-calculator.js`, `early-repayment.js` (rozhodovací strom), amortizační tabulka + CSV
+**Fáze 3 — Grafy + rozhodovací nástroje**
+- `charts.js`, `tax-calculator.js`, `early-repayment.js`, `decision-trees.js` (fixace/refi/mimořádná), `offer-translator.js`, `checklists.js` (+ kopírování otázek), amortizační tabulka + CSV
+- Sekce: příklad rodiny, red flags, "Co se stane, když…", timeline peněz
 
 **Fáze 4 — Paywall (demo) + print**
 - `paywall.js` soft gate (bez obsahu v klientu), `print.css` pro PDF
@@ -456,11 +624,15 @@ hyposvepomoci/
 ---
 
 ## Ověření (verifikace)
-1. `data-layer`: `.fact` elementy se plní z JSON, tooltip zobrazuje zdroj + datum ověření; nikde není číslo natvrdo
+1. `data-layer`: `.fact` elementy se plní z JSON, tooltip zobrazuje zdroj + datum ověření + štítek typu (ZÁKON/DOPORUČENÍ/RADA); nikde není číslo natvrdo
 2. Regulatorní logika: přepínač vlastní/investiční + věk <36 mění LTV práh; DSTI/DTI zobrazeny jako doporučení, ne verdikt
 3. Kalkulačka: LTV počítáno vůči odhadu (cena 5M / odhad 4,6M / úvěr 4M → 86,96 %); anuita ověřená testy; URL sdílení funguje
-4. `calculator-core.test.js`: všechny testy + invarianty zelené
-5. Předčasné splacení: rozhodovací strom vrací správné větve; žádný univerzální "1 % / 50 000 Kč" claim
-6. Daňový kalkulátor: 300k do 2020 / 150k od 2021 dle roku obstarání; jasně oddělený odpočet vs. sleva vs. vrácení
-7. Paywall: soft gate nezobrazuje prémiový obsah v HTML/JS; kód netvrdí, že chrání placený obsah
-8. Mobile: masky vstupů, hamburger, dotykové cíle 44px; Accessibility: tab nav, screen reader
+4. `calculator-core.test.js`: všechny testy + invarianty zelené (vč. A/B/C dostupnost, rezerva, oba stres testy)
+5. Designový princip: u klíčových ukazatelů je vždy "Co to pro mě znamená?" + akční krok; u splátky/výše úvěru tři pohledy 🏦/⚖️/🧠
+6. Průvodce "Jsem připraven": 6–8 otázek → barevný výsledek → předání hodnot do kalkulačky
+7. Rozhodovací stromy (fixace/refi/mimořádná/předčasné splacení) vrací správné větve; žádný univerzální "1 % / 50 000 Kč" claim; formulace bez dogmat ("víc než jednu nabídku", ne "lenost klientů")
+8. Rezerva/dostupnost: kalkulačka rozlišuje vlastní zdroje ≠ vlastní peníze, ukazuje zůstatek hotovosti po koupi a "kolik zbyde" (C) před "kolik půjčí banka" (B)
+9. Nástroje: překladač nabídky, red flags, "Co se stane, když…", checklist před podpisem (free), otázky na bankéře s kopírováním do telefonu
+10. Daňový kalkulátor: 300k do 2020 / 150k od 2021 dle roku obstarání; jasně oddělený odpočet vs. sleva vs. vrácení
+11. Paywall: soft gate nezobrazuje prémiový obsah v HTML/JS; kód netvrdí, že chrání placený obsah; premium = nástroje, ne "více informací"
+12. Mobile: masky vstupů, hamburger, dotykové cíle 44px; Accessibility: tab nav, screen reader

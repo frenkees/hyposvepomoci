@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hyposvepomoci — Hypotéka srozumitelně, krok za krokem</title>
+  <meta name="description" content="Interaktivní průvodce hypotékou pro laiky. Zjistěte, jestli jste připraveni, spočítejte splátku, rozumějte fixaci, poplatkům i tomu, kolik si můžete bezpečně dovolit. Založeno na aktuální české legislativě.">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://hyposvepomoci.cz/">
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:title" content="Hyposvepomoci — Hypotéka srozumitelně, krok za krokem">
+  <meta property="og:description" content="Interaktivní průvodce hypotékou pro laiky: kalkulačka, stres test, fixace, poplatky a kolik si můžete bezpečně dovolit. Podle aktuální české legislativy.">
+  <meta property="og:image" content="assets/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/calculator.css">
+  <link rel="stylesheet" href="css/terms.css">
+  <link rel="stylesheet" href="css/paywall.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+  <!-- Navigace -->
+  <header class="nav" data-open="false">
+    <div class="container nav__inner">
+      <a class="nav__brand" href="#top">
+        <svg class="nav__brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1B4965" d="M12 2 3 9v13h6v-7h6v7h6V9z"/></svg>
+        Hyposvepomoci
+      </a>
+      <nav aria-label="Hlavní navigace">
+        <ul class="nav__links">
+          <li><a href="#pruvodce">Průvodce</a></li>
+          <li><a href="#zaklady">Základy</a></li>
+          <li><a href="#kroky">Postup</a></li>
+          <li><a href="#uroky">Úroky a fixace</a></li>
+          <li><a href="#pozor">Na co pozor</a></li>
+          <li><a href="#kalkulacka">Kalkulačka</a></li>
+          <li><a href="#slovnicek">Slovníček</a></li>
+        </ul>
+      </nav>
+      <button class="nav__toggle" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobilni-menu"><span></span></button>
+    </div>
+    <div class="nav__mobile" id="mobilni-menu">
+      <ul>
+        <li><a href="#pruvodce">Průvodce „Jsem připraven?“</a></li>
+        <li><a href="#zaklady">Co je hypotéka</a></li>
+        <li><a href="#kroky">Krok za krokem</a></li>
+        <li><a href="#nakup">Nákup nemovitosti</a></li>
+        <li><a href="#podminky">Podmínky ČNB</a></li>
+        <li><a href="#uroky">Úroky a fixace</a></li>
+        <li><a href="#banka">Bankovní realita</a></li>
+        <li><a href="#pozor">Na co si dát pozor</a></li>
+        <li><a href="#vlastni-zdroje">Nemám dost vlastních zdrojů</a></li>
+        <li><a href="#splaceni">Splácení a refinancování</a></li>
+        <li><a href="#naklady">Náklady · nájem vs. koupě</a></li>
+        <li><a href="#predcasne">Předčasné splacení</a></li>
+        <li><a href="#dane">Daňové odpočty</a></li>
+        <li><a href="#kalkulacka">Kalkulačka</a></li>
+        <li><a href="#slovnicek">Slovníček</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <span id="top"></span>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Hypotéka srozumitelně, krok za krokem</h1>
+      <p class="hero__lead">Než půjdete do banky nebo za poradcem, zjistěte, jak hypotéka opravdu funguje — kolik si můžete <strong>bezpečně</strong> dovolit, na co si dát pozor a co vám banka nemusí říct sama.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#pruvodce">Jsem připraven na hypotéku?</a>
+        <a class="btn btn--ghost" href="#kalkulacka">Spustit kalkulačku</a>
+      </div>
+      <div class="hero__trust">
+        <span>✔ Založeno na české legislativě</span>
+        <span>✔ Srozumitelné laikům</span>
+        <span>✔ Bezplatný přístup k jádru obsahu</span>
+      </div>
+    </div>
+  </section>
+
+  <main id="obsah">
+
+    <!-- Průvodce: Jsem připraven na hypotéku? -->
+    <section class="section" id="pruvodce">
+      <div class="container">
+        <h2>Jsme připraveni? Pojďme to zjistit.</h2>
+        <p class="section__lead">Odpovězte na pár jednoduchých otázek. Nic neposíláme, výsledek uvidíte hned a je jen orientační — pomůže vám zorientovat se, ne rozhodnout za vás.</p>
+
+        <div class="guide" id="guide" data-guide role="group" aria-label="Průvodce připraveností na hypotéku" aria-live="polite">
+          <!-- Obsah generuje js/readiness-guide.js -->
+          <noscript><p class="note note--warn">Průvodce vyžaduje zapnutý JavaScript. Můžete pokračovat rovnou na <a href="#kalkulacka">kalkulačku</a> nebo <a href="#zaklady">základy hypoték</a>.</p></noscript>
+        </div>
+
+        <h3 style="margin-top:var(--sp-12)">Nebo rovnou podle situace</h3>
+        <div class="journey">
+          <a class="journey__tile" href="#zaklady"><span class="journey__tile-icon">🧭</span>Teprve začínám</a>
+          <a class="journey__tile" href="#kroky"><span class="journey__tile-icon">🏠</span>Chci koupit nemovitost</a>
+          <a class="journey__tile" href="#uroky"><span class="journey__tile-icon">📊</span>Vybírám hypotéku</a>
+          <a class="journey__tile" href="#pozor"><span class="journey__tile-icon">📝</span>Mám hypotéku</a>
+          <a class="journey__tile" href="#uroky"><span class="journey__tile-icon">⏳</span>Končí mi fixace</a>
+          <a class="journey__tile" href="#refinancovani"><span class="journey__tile-icon">🔄</span>Chci refinancovat</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. Co je hypotéka -->
+    <section class="section" id="zaklady">
+      <div class="container">
+        <h2>Co je hypotéka</h2>
+        <p class="section__lead">Hypotéka je dlouhodobý úvěr zajištěný nemovitostí. Banka vám půjčí a jako jistotu si zapíše <button class="term" data-term="zastava">zástavní právo</button> k nemovitosti — dokud splácíte, je vaše.</p>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3>Čím se liší od jiných úvěrů</h3>
+            <div class="amort"><table class="amort-table" style="text-align:left">
+              <thead><tr><th style="text-align:left">&nbsp;</th><th style="text-align:left">Hypotéka</th><th style="text-align:left">Spotřebitelský úvěr</th><th style="text-align:left">Úvěr ze stav. spoření</th></tr></thead>
+              <tbody>
+                <tr><td style="text-align:left">Zajištění</td><td style="text-align:left">nemovitostí</td><td style="text-align:left">obvykle bez zajištění</td><td style="text-align:left">podle výše i bez zajištění</td></tr>
+                <tr><td style="text-align:left">Úrok</td><td style="text-align:left">nižší</td><td style="text-align:left">vyšší</td><td style="text-align:left">pevný, daný smlouvou</td></tr>
+                <tr><td style="text-align:left">Doba</td><td style="text-align:left">až 30–40 let</td><td style="text-align:left">kratší</td><td style="text-align:left">střední</td></tr>
+                <tr><td style="text-align:left">Účel</td><td style="text-align:left">bydlení (účelová)</td><td style="text-align:left">libovolný</td><td style="text-align:left">bytové potřeby</td></tr>
+              </tbody>
+            </table></div>
+            <p class="text-muted" style="font-size:.85rem">Orientační srovnání. Konkrétní podmínky se liší podle produktu a banky.</p>
+          </div>
+          <div class="card">
+            <h3>Timeline peněz — kdy je vlastně potřebujete?</h3>
+            <div class="money-flow">
+              <div class="money-flow__step">Vlastní peníze + hypotéka</div>
+              <div class="money-flow__arrow">▼</div>
+              <div class="money-flow__step">Prodávající dostane zaplaceno</div>
+              <div class="money-flow__arrow">▼</div>
+              <div class="money-flow__step">Katastr — zápis vlastnictví a zástavy</div>
+              <div class="money-flow__arrow">▼</div>
+              <div class="money-flow__step">Banka získá zástavu, vy splácíte</div>
+            </div>
+            <p class="text-muted">Pro první kupující bývá nejtěžší pochopit, <em>kdy</em> musí mít peníze připravené. Detail v <a href="#kalkulacka">kalkulačce (rozpočet koupě)</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Krok za krokem -->
+    <section class="section" id="kroky">
+      <div class="container">
+        <h2>Jak na hypotéku krok za krokem</h2>
+        <ol class="timeline">
+          <li class="timeline__item"><div class="timeline__num">1</div><div class="timeline__title">Zjistěte, kolik si můžete dovolit</div><p>Ne kolik vám banka půjčí, ale kolik unesete bezpečně. Viz <a href="#kalkulacka">kalkulačka dostupnosti</a>.</p></li>
+          <li class="timeline__item"><div class="timeline__num">2</div><div class="timeline__title">Naspořte vlastní zdroje</div><p>Podle závazného LTV potřebujete zpravidla alespoň <span class="fact" data-fact="ltv_owner_standard" data-part="means" data-badge="false"></span></p></li>
+          <li class="timeline__item"><div class="timeline__num">3</div><div class="timeline__title">Vybírejte nemovitost</div><p>Ideálně s předběžným posouzením (pre-approval) od banky.</p></li>
+          <li class="timeline__item"><div class="timeline__num">4</div><div class="timeline__title">Porovnejte více než jednu nabídku</div><p>U většího úvěru se vyplatí získat několik konkurenčních nabídek — ne dogma „vždy 3–5 bank“, ale nespoléhat na jednu.</p></li>
+          <li class="timeline__item"><div class="timeline__num">5</div><div class="timeline__title">Podejte žádost</div><p>Připravte doklady — jiné pro zaměstnance (potvrzení o příjmu, výpisy), jiné pro OSVČ (daňová přiznání). Detaily v sekci <a href="#banka">Bankovní realita</a>.</p></li>
+          <li class="timeline__item"><div class="timeline__num">6</div><div class="timeline__title">Odhad nemovitosti</div><p>U bytů ve městech banky často dělají online (desktopový) odhad zdarma. <strong>Nespěchejte s vlastním posudkem</strong> — banka ho nemusí akceptovat.</p></li>
+          <li class="timeline__item"><div class="timeline__num">7</div><div class="timeline__title">Schválení a podpis smlouvy</div><p>Před podpisem si projděte <a href="#nastroje">checklist před podpisem</a> — sazba, RPSN, podmínky sazby, pojištění, sankce, mimořádné splátky.</p></li>
+          <li class="timeline__item"><div class="timeline__num">8</div><div class="timeline__title">Čerpání úvěru</div><p>Jak a kdy banka uvolní peníze.</p></li>
+          <li class="timeline__item"><div class="timeline__num">9</div><div class="timeline__title">Zápis zástavního práva</div><p>Vklad lze povolit nejdříve po <span class="fact" data-fact="katastr_ochranna_lhuta"></span> od plomby. Skutečná doba bývá delší a mění se. Banka často uvolní peníze už na základě plomby.</p></li>
+          <li class="timeline__item"><div class="timeline__num">10</div><div class="timeline__title">Splácení začíná</div><p>Pravidelná anuitní splátka. Nastavte si připomínku 4–5 měsíců před koncem fixace.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Nákup nemovitosti: smlouvy, úschova, katastr (P2) -->
+    <section class="section" id="nakup">
+      <div class="container">
+        <h2>Nákup nemovitosti: smlouvy, úschova, katastr</h2>
+        <p class="section__lead">Kolem hypotéky běží druhý proces — samotná koupě. Tady je, jak jdou za sebou smlouvy, peníze v úschově a zápis v <button class="term" data-term="katastr">katastru</button>.</p>
+
+        <h3 style="margin-top:var(--sp-6)">Jak jde koupě za sebou</h3>
+        <ol class="timeline" id="purchase-timeline"></ol>
+
+        <h3 style="margin-top:var(--sp-12)">Klíčové dokumenty a pojmy</h3>
+        <div class="grid grid--2" id="purchase-docs"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Checklist před koupí</h3>
+        <p class="text-muted">Odškrtnuté položky se pamatují jen ve vašem prohlížeči. Projděte si právní stav nemovitosti i podmínky financování.</p>
+        <div id="purchase-checklist"></div>
+      </div>
+    </section>
+
+    <!-- 3. Podmínky ČNB -->
+    <section class="section" id="podminky">
+      <div class="container">
+        <h2>Podmínky a limity: co vyžaduje regulace</h2>
+        <p class="section__lead">Klíčové je rozlišit, co je <strong>závazné</strong> a co je jen <strong>doporučení</strong>. To zásadně mění, jak číst svoji situaci.</p>
+
+        <div class="grid grid--3">
+          <div class="card">
+            <h3>LTV <span class="fact" data-fact="ltv_owner_standard" data-part="value"></span></h3>
+            <p>Poměr úvěru k hodnotě zajištění. Pro mladší 36 let na vlastní bydlení až <span class="fact" data-fact="ltv_owner_young" data-part="value" data-badge="false"></span>.</p>
+          </div>
+          <div class="card">
+            <h3>DSTI <span class="fact" data-fact="dsti_recommendation" data-part="value"></span></h3>
+            <p><span class="fact" data-fact="dsti_recommendation" data-part="means" data-badge="false"></span></p>
+          </div>
+          <div class="card">
+            <h3>DTI <span class="fact" data-fact="dti_recommendation" data-part="value"></span></h3>
+            <p><span class="fact" data-fact="dti_recommendation" data-part="means" data-badge="false"></span></p>
+          </div>
+        </div>
+
+        <div class="note note--tip">
+          <div class="note__title">Investiční nemovitost je posuzována přísněji</div>
+          <p>Od 1. 4. 2026 platí doporučení LTV <span class="fact" data-fact="ltv_investment" data-part="value" data-badge="false"></span> a DTI <span class="fact" data-fact="dti_investment" data-part="value" data-badge="false"></span> pro investiční obytné nemovitosti. V kalkulačce přepnete typ nemovitosti.</p>
+        </div>
+
+        <h3 style="margin-top:var(--sp-8)">Příklad: jak číst jeden ukazatel ze tří pohledů</h3>
+        <p>U měsíční splátky nejde jen o to, „co dovolí banka“. Rozlišujeme:</p>
+        <div class="three-views">
+          <div class="view view--bank"><div class="view__label">🏦 Banka</div><p>Posuzuje váš příjem, závazky, historii v registrech a hodnotu zajištění.</p></div>
+          <div class="view view--reg"><div class="view__label">⚖️ Regulace</div><p>Závazné je LTV. DSTI/DTI jsou jen doporučení — ne důvod k automatickému zamítnutí.</p></div>
+          <div class="view view--you"><div class="view__label">🧠 Vy</div><p>Nejdůležitější je, kolik vám po splátce a nákladech skutečně zbyde. To řeší kalkulačka dostupnosti.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Bankovní realita -->
+    <section class="section" id="banka">
+      <div class="container">
+        <h2>Bankovní realita: co banka opravdu posuzuje</h2>
+        <p class="section__lead">Banka vás vidí přes příjmy, závazky, historii a nemovitost. Tady je, jak jednotlivé věci obvykle funguje — a proč nejde říct univerzální pravidlo.</p>
+        <div class="note note--warn">
+          <div class="note__title">Obecné principy, ne metodika konkrétní banky</div>
+          <p>Každá banka posuzuje jinak. Následující je vysvětlení principů, ne závazný výpočet. Konkrétní podmínky vždy ověřte přímo u banky nebo s nezávislým poradcem.</p>
+        </div>
+        <div id="bank-reality"></div>
+      </div>
+    </section>
+
+    <!-- 5. Úroky a fixace -->
+    <section class="section" id="uroky">
+      <div class="container">
+        <h2>Úroky a fixace</h2>
+        <h3>Co skutečně ovlivňuje vaši sazbu</h3>
+        <p>Nabídnutá sazba není jen „repo sazba plus přirážka“. Zjednodušeně: měnová politika → tržní sazby → náklady financování banky → marže a vaše rizikovost → nabídnutá sazba. U dlouhých fixací hrají velkou roli tržní sazby.</p>
+        <h3>Fixační období</h3>
+        <p>Volíte 1, 3, 5, 7, 10, 15 nebo 20 let. Kratší fixace bývá levnější, ale nesete riziko změny sazby; delší dává jistotu splátky za cenu vyšší sazby.</p>
+        <div class="note">
+          <div class="note__title">Rozhodovací strom fixace</div>
+          <p>Chci jistotu splátky? → spíš delší fixace. Unesu riziko změny sazby a mám rezervu? → spíš kratší fixace. Nejde o univerzální doporučení — záleží na vaší situaci a trhu.</p>
+        </div>
+        <h3>Konec fixace</h3>
+        <p>Po skončení fixace <strong>nemusí být nejlepší přijmout první nabídku své banky</strong> — nová sazba nebývá nejvýhodnější. Máte okno na refinancování nebo splacení, obvykle bez sankce. Řešte to s předstihem.</p>
+      </div>
+    </section>
+
+    <!-- 6. Na co si dát pozor -->
+    <section class="section" id="pozor">
+      <div class="container">
+        <h2>Na co si dát pozor</h2>
+        <div class="grid grid--2">
+          <div class="card"><h3>Skryté poplatky</h3><p>Odhad, vedení účtu, zpracování, pojištění. Porovnávejte podle <button class="term" data-term="rpsn">RPSN</button>, ne jen podle <button class="term" data-term="urok">úroku</button>.</p></div>
+          <div class="card"><h3>Pojištění</h3><p>Pojištění nemovitosti bývá povinné (vinkulované ve prospěch banky). Životní pojištění zpravidla povinné není — často je jen podmínkou zvýhodněné sazby a bankovní bývá dražší než externí.</p></div>
+          <div class="card"><h3>Časté chyby</h3><p>Neporovnání nabídek, sledování jen úroku, půjčení si maxima bez rezervy, opomenutí životních změn.</p></div>
+          <div class="card"><h3>Checklist „Co si pohlídat ve smlouvě“</h3><p>Interaktivní checklist s odškrtáváním najdete v sekci <a href="#nastroje">Praktické nástroje</a> a před koupí i v sekci <a href="#nakup">Nákup nemovitosti</a>.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Předčasné splacení -->
+    <section class="section" id="predcasne">
+      <div class="container">
+        <h2>Předčasné splacení</h2>
+        <p class="section__lead">Kolik zaplatíte, závisí na situaci — neplatí univerzální „1 % / 50 000 Kč“. Obecný strop je <span class="fact" data-fact="obecny_strop_procenta" data-part="value" data-badge="false"></span>, nejvýše <span class="fact" data-fact="obecny_strop_maximum" data-part="value"></span>. Existuje řada případů bez náhrady.</p>
+        <div class="card" id="early-repayment-tree"><p class="placeholder">Načítám rozhodovací strom…</p></div>
+      </div>
+    </section>
+
+    <!-- 8. Refinancování -->
+    <section class="section" id="refinancovani">
+      <div class="container">
+        <h2>Refinancování</h2>
+        <p class="section__lead">Má smysl, když úspora na úrocích převáží náklady (nový odhad, zápis zástavního práva, administrativa). Rozhoduje break-even — za jak dlouho se to vrátí.</p>
+        <div class="note">
+          <div class="note__title">Rozhodovací strom refinancování</div>
+          <p>Končí fixace? → Porovnat nabídku své banky → Porovnat konkurenci → Spočítat celkové náklady → Break-even. Refinanční kalkulačka je součástí prémiových nástrojů.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Daňové odpočty -->
+    <section class="section" id="dane">
+      <div class="container">
+        <h2>Daňové odpočty</h2>
+        <p class="section__lead">Úroky lze odečíst od <strong>základu daně</strong> — to není totéž co sleva na dani ani vrácení celé částky. Limit závisí na datu obstarání bytové potřeby: <span class="fact" data-fact="odpocet_limit_do_2020" data-part="value" data-badge="false"></span> do konce 2020, <span class="fact" data-fact="odpocet_limit_od_2021" data-part="value"></span> od roku 2021.</p>
+        <div class="card" id="tax-calculator"><p class="placeholder">Načítám daňový kalkulátor…</p></div>
+      </div>
+    </section>
+
+    <!-- 10. Státní podpora bydlení -->
+    <section class="section" id="stat">
+      <div class="container">
+        <h2>Státní podpora bydlení — aktuálně dostupné programy</h2>
+        <div class="grid grid--2" id="sfpi-programs"><p class="placeholder">Načítám programy…</p></div>
+      </div>
+    </section>
+
+    <!-- Kalkulačka -->
+    <section class="section" id="kalkulacka">
+      <div class="container">
+        <h2>Hypoteční kalkulačka</h2>
+        <p class="section__lead">Spočítejte si splátku, LTV vůči odhadu, rezervu po koupi i to, kolik si můžete <strong>bezpečně</strong> dovolit. Scénář můžete sdílet odkazem.</p>
+
+        <div class="calc-mode" role="group" aria-label="Režim kalkulačky">
+          <button type="button" class="calc-mode__btn" data-mode="B" aria-pressed="true">🔎 Teprve hledám nemovitost</button>
+          <button type="button" class="calc-mode__btn" data-mode="A" aria-pressed="false">🏠 Mám vybranou nemovitost</button>
+        </div>
+
+        <div id="affordability-root"><p class="placeholder">Načítám diagnostiku…</p></div>
+        <div id="calculator-root" hidden><p class="placeholder">Načítám kalkulačku…</p></div>
+      </div>
+    </section>
+
+    <!-- Nemám dost vlastních zdrojů (P2) -->
+    <section class="section" id="vlastni-zdroje">
+      <div class="container">
+        <h2>Nemám dost vlastních peněz. Co můžu udělat?</h2>
+        <p class="section__lead">Bez slibů o „obcházení pravidel“. Banka nikdy nepůjčí 100 % hodnoty a limit <button class="term" data-term="ltv">LTV</button> je závazný. Tady jsou legitimní cesty, jak nedostatek <button class="term" data-term="vlastni-zdroje">vlastních zdrojů</button> řešit — s jejich výhodami, nevýhodami a riziky.</p>
+
+        <div class="grid grid--2" id="equity-options"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: dodatečná nemovitost do zástavy</h3>
+        <p class="text-muted">LTV se počítá vůči hodnotě <em>všech</em> zastavených nemovitostí. Přidání další nemovitosti tak může LTV snížit — ale ta nemovitost je pak také v ohrožení.</p>
+        <div class="card" id="tool-zastava"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: co když banka ocení nemovitost levněji?</h3>
+        <p class="text-muted">LTV se počítá z <button class="term" data-term="odhad">odhadu</button>, ne z kupní ceny. Nižší ocenění zvyšuje potřebné vlastní zdroje.</p>
+        <div class="card" id="tool-ocenene"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nástroj: konsolidace jiných dluhů do hypotéky</h3>
+        <p class="text-muted">Sloučení hypotéky a dalších úvěrů může snížit měsíční zatížení díky delší splatnosti — samo o sobě ale dluh nesnižuje a původně nezajištěný dluh je pak zajištěn nemovitostí.</p>
+        <div class="card" id="tool-konsolidace"></div>
+      </div>
+    </section>
+
+    <!-- Rozhodovací nástroje: splácení (P2) -->
+    <section class="section" id="splaceni">
+      <div class="container">
+        <h2>Splácení: rozhodovací nástroje</h2>
+        <p class="section__lead">Kratší nebo delší doba? Poslat peníze do hypotéky, nebo si nechat rezervu? Vyplatí se refinancovat? Spočítejte si to.</p>
+
+        <h3 style="margin-top:var(--sp-8)">Kolik mě stojí delší hypotéka? (30 vs 35 let)</h3>
+        <p class="text-muted">Nižší <button class="term" data-term="anuita">měsíční splátka</button> nemusí znamenat levnější hypotéku — za delší dobu zaplatíte víc na úrocích.</p>
+        <div class="card" id="tool-doba"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Poslat peníze do hypotéky, nebo si nechat rezervu?</h3>
+        <p class="text-muted">Mimořádná splátka uspoří na <button class="term" data-term="urok">úrocích</button> — ale rezerva bývá důležitější než rychlé splacení.</p>
+        <div class="card" id="tool-extra"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Vyplatí se refinancovat?</h3>
+        <p class="text-muted"><button class="term" data-term="refinancovani">Refinancování</button> má smysl, když úspora převáží náklady. Rozhoduje break-even.</p>
+        <div class="card" id="tool-refi"></div>
+      </div>
+    </section>
+
+    <!-- Skutečné náklady bydlení + nájem vs koupě (P2) -->
+    <section class="section" id="naklady">
+      <div class="container">
+        <h2>Skutečné náklady bydlení</h2>
+        <p class="section__lead">Splátka není všechno. K reálným nákladům bydlení patří i energie, fond oprav, pojištění a údržba.</p>
+        <div class="card" id="tool-naklady"></div>
+
+        <h3 style="margin-top:var(--sp-12)">Nájem vs. koupě</h3>
+        <p class="text-muted">Zjednodušené porovnání za zvolený horizont. Neříká, že koupě je vždy lepší — záleží na předpokladech.</p>
+        <div class="card" id="tool-najem"></div>
+      </div>
+    </section>
+
+    <!-- Nástroje (Fáze 3) -->
+    <section class="section" id="nastroje">
+      <div class="container">
+        <h2>Praktické nástroje</h2>
+        <div class="grid grid--2">
+          <div class="card" id="offer-translator"><h3>Překladač bankovní nabídky</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="red-flags"><h3>Red flags v nabídce</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="checklist"><h3>Checklist před podpisem</h3><p class="placeholder">Načítám…</p></div>
+          <div class="card" id="banker-questions"><h3>Otázky, které položit bankéři</h3><p class="placeholder">Načítám…</p></div>
+        </div>
+        <h3 style="margin-top:var(--sp-8)">Co se stane, když…</h3>
+        <div class="card" id="faq"><p class="placeholder">Načítám…</p></div>
+        <h3 style="margin-top:var(--sp-8)">Příklad: Jan a Petra</h3>
+        <div class="card" id="family-example"><p class="placeholder">Načítám…</p></div>
+      </div>
+    </section>
+
+    <!-- Prémiový obsah (paywall — pouze UX demo, ne bezpečnostní ochrana) -->
+    <section class="section" id="premium">
+      <div class="container">
+        <h2>Hypotéka Pro — prémiové nástroje</h2>
+        <p class="section__lead">Jádro webu je zdarma. Prémiové jsou <strong>rozhodovací nástroje</strong>, ne „více informací“. Sekce je zatím ukázková (demo).</p>
+        <div id="premium-root"></div>
+      </div>
+    </section>
+
+    <!-- 11. Slovníček -->
+    <section class="section" id="slovnicek">
+      <div class="container">
+        <h2>Slovníček v normální češtině</h2>
+        <p class="section__lead">Nejdřív rychlé vysvětlení, u každého pojmu můžete rozbalit „Chci tomu opravdu rozumět“.</p>
+        <div class="glossary" id="glossary-list"><p class="placeholder">Načítám slovníček…</p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__disclaimer"><strong>Upozornění:</strong> Tento web slouží pouze ke vzdělávacím účelům a nepředstavuje finanční, právní ani daňové poradenství. Uvedené hodnoty se mohou v čase měnit — vždy ověřujte aktuální stav u příslušných institucí a své banky.</p>
+      <div class="footer__meta">
+        <p><strong>Stav informací:</strong> průběžně aktualizováno · zdroje: ČNB, MF ČR, Finanční správa, ČÚZK, SFPI</p>
+        <div class="currency-layers" data-currency-layers></div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Hyposvepomoci — hypoteční průvodce a kalkulačka",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "cs",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CZK" },
+        "description": "Interaktivní průvodce hypotékou pro laickou veřejnost: kalkulačka splátek, LTV vůči odhadu, stres test, daňový odpočet a rozhodovací nástroje podle aktuální české legislativy."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Co když banka ocení dům na méně, než kolik stojí?", "acceptedAnswer": { "@type": "Answer", "text": "LTV se počítá z odhadu, ne z kupní ceny. Nižší odhad znamená vyšší LTV; rozdíl musíte dorovnat vyššími vlastními zdroji nebo hledat jinou banku." } },
+          { "@type": "Question", "name": "Je DSTI nebo DTI závazný limit?", "acceptedAnswer": { "@type": "Answer", "text": "Aktuálně ne. Závazný je limit LTV. DSTI a DTI jsou doporučení ČNB — obezřetnost nad 40 % DSTI a nad 8násobkem DTI, ne důvod k automatickému zamítnutí." } },
+          { "@type": "Question", "name": "Kolik zaplatím při předčasném splacení hypotéky?", "acceptedAnswer": { "@type": "Answer", "text": "Závisí na situaci — neplatí univerzální jedno procento. Obecný strop je 0,25 % za každý rok do konce fixace, nejvýše 1 %; řada situací (konec fixace, zákonné životní situace) je bez náhrady." } }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script src="js/data-layer.js"></script>
+  <script src="js/terms.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/readiness-guide.js"></script>
+  <script src="js/calculator-core.js"></script>
+  <script src="js/calculator-ui.js"></script>
+  <script src="js/affordability.js"></script>
+  <script src="js/equity.js"></script>
+  <script src="js/repayment.js"></script>
+  <script src="js/bank-reality.js"></script>
+  <script src="js/purchase.js"></script>
+  <script src="js/costs.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/tax-calculator.js"></script>
+  <script src="js/early-repayment.js"></script>
+  <script src="js/offer-translator.js"></script>
+  <script src="js/checklists.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/paywall.js"></script>
+</body>
+</html>
