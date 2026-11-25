@@ -44,6 +44,9 @@
 .hero__cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-6); }
 .hero .btn--ghost { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
 .hero .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); }
+/* Primární tlačítko by na tmavém hero splývalo s pozadím (stejná barva) → světlá varianta */
+.hero .btn--primary { background: #fff; color: var(--color-primary-dark); }
+.hero .btn--primary:hover { background: var(--color-secondary-light); color: var(--color-primary-dark); }
 .hero__trust { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-8); font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); }
 .hero__trust span { display: inline-flex; align-items: center; gap: var(--sp-2); }
 
